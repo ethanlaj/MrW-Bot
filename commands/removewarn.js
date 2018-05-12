@@ -1,6 +1,7 @@
 const Discord = require("discord.js");
 
 module.exports.run = async (bot, message, args) => {
+
   let target = message.guild.member(message.mentions.users.first());
   if (target) {
     if(message.member.hasPermission("KICK_MEMBERS") || message.member.hasPermission("ADMINISTRATOR") || message.member.hasPermission("BAN_MEMBERS")) {
@@ -33,6 +34,22 @@ module.exports.run = async (bot, message, args) => {
                         var user = bot.users.get(msg.content.substr(38).slice(0, -reason.length));
                         msg.delete();
                         message.reply(`${message.author}, Sucessfully removed warning \`${warn2clear}\`: \`${reason}\` on \`${target.user.username}\` by \`${user.tag}\``);
+                        var logsDatabase = bot.channels.get("440238037201453056");
+			logsDatabase.fetchMessages({ limit: 100 }).then(logmessages => {
+				logmessages.forEach(msg => {
+					var logChannel = bot.channels.get(msg.content.split(" ")[1]);
+					if (logChannel == undefined) return msg.delete();
+					var logGuild = logChannel.guild;
+					if (logGuild == undefined) return msg.delete();
+					if (`${logGuild.id}` === `${message.guild.id}`) {
+						const rwarnEmbed = new Discord.RichEmbed()
+							.setTitle("Removed Warning")
+							.setColor("RED")
+							.addField("Removed Warning Information", `Member Removed Warning From's ID: \`${target.id}\`\nMember Removed Warning From: ${target}\nRemoved At: \`${new Date(Date.now())}\`\nModerator: ${message.author}\nWarning Number: \`${warn2clear}\`\nWarning Reason: \`${reason}\``)
+						logChannel.send({ embed: rwarnEmbed }).catch(function() {});
+					}
+				});
+			});
                       });
                     });
                   }

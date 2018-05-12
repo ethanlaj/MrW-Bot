@@ -4,7 +4,7 @@ module.exports.run = async (bot, message, args) => {
   if (!message.member.hasPermission("KICK_MEMBERS") && !message.member.hasPermission("ADMINISTRATOR") && !message.member.hasPermission("BAN_MEMBERS")) return message.channel.send("Insufficent permissions.");
   let target = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
   if (!target) return message.channel.send("Please **mention** a valid user.");
-  var dbguild = bot.guilds.get("417149156193337344");
+  var dbguild = bot.guilds.get("443929284411654144");
   var dbchannels = dbguild.channels.filter(m => RegExp("warn-database", "gi").test(m.name));
   var finalmessage = `**Warnings for ${target.user.username}:**\n`
   var warningnum = 0;

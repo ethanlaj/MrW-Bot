@@ -1,6 +1,7 @@
 const Discord = require("discord.js");
 
 module.exports.run = async (bot, message, args) => {
+	
 	let choice = args[0];
 	var responses = ["rock", "paper", "scissors"];
 	if (!choice) return message.reply("You did not provide your choice!")

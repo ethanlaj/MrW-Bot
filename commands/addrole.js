@@ -1,7 +1,8 @@
 const Discord = require("discord.js");
 
 module.exports.run = async (bot, message, args, prefix, content) => {
-	if(args[0] === undefined) return message.reply("Please specify the following params [optional] (required). `!addrole [hexcolor: #XXXXXX] [hoist: true/false] (role name)`.").catch(function() {});
+	if(!message.member.hasPermission("MANAGE_ROLES")) return message.reply("You do not have permissions to use this command.").catch(function() {});
+	if(args[0] === undefined) return message.reply("Please specify the following params [optional] (required). `!!addrole [hexcolor: #XXXXXX] [hoist: true/false] (role name)`.").catch(function() {});
 	var ishextag = null;
 	if(args[0].startsWith("#")) ishextag = /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(args[0]);
 	if(ishextag === false) return message.reply("Please specify a valid hex code. Example: \`#ff0000\`").catch(function() {});

@@ -1,8 +1,9 @@
 const Discord = require("discord.js");
 
 module.exports.run = async (bot, message, args, prefix, content) => {
+	
 	if (!message.member.hasPermission("MANAGE_GUILD")) return message.reply("You do not have permissions to use this command.");
-	var dbguild = bot.guilds.get("417149156193337344");
+	var dbguild = bot.guilds.get("443929284411654144");
 	var dbchannels = dbguild.channels.filter(channel => channel.name.includes("autoroles-database"));
 	var count = 0;
 	var count2 = 0;

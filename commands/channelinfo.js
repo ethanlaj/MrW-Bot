@@ -1,6 +1,7 @@
 const Discord = require("discord.js");
 
 module.exports.run = async (bot, message, args, prefix, content) => {
+	
 	let channel = message.channel
 
 	let channelem = new Discord.RichEmbed()

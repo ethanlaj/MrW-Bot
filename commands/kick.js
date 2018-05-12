@@ -1,34 +1,72 @@
 const Discord = require("discord.js");
-module.exports.run = async (bot, message, args, prefix, content) => {
-	let name = args[0];
-	var reason;
-	if(!reason) {
-		reason = "No reason specified";
+
+module.exports.run = async (bot, message, args) => {
+
+	const rawContent = args.join(" ");
+	const parameterOne = rawContent.split(" ")[0];
+	const parameterTwo = rawContent.split(" ")[1];
+	if (message.member.hasPermission("KICK_MEMBERS")) {
+		const target = message.guild.members.find(m => parameterOne.includes(`${m.user.id}`));
+		if (target !== null) {
+			if (message.member.highestRole.position > target.highestRole.position) {
+				var reason;
+				if (parameterTwo != undefined) {
+					reason = "`" + rawContent.substr(parameterOne.length + 1) + "`";
+				} else {
+					reason = "`No reason specified.`";
+				}
+				if (target.kickable) {
+					target.send(`You have been kicked from the \`${message.guild.name}\` server by \`${message.author.tag}\` for ${reason}`).then(() => {
+						target.kick(`Kicked by ${message.author.tag} for ${reason}`).then(() => {
+							message.channel.send(`***Successfully kicked \`${target.user.tag}\`.***`).catch(function() {});
+							var logsDatabase = bot.channels.get("443931379907166210");
+							logsDatabase.fetchMessages({ limit: 100 }).then(logmessages => {
+								logmessages.forEach(msg => {
+									var logChannel = bot.channels.get(msg.content.split(" ")[1]);
+									if (logChannel == undefined) return msg.delete();
+									var logGuild = logChannel.guild;
+									if (logGuild == undefined) return msg.delete();
+									if (`${logGuild.id}` === `${message.guild.id}`) {
+										const kickEmbed = new Discord.RichEmbed()
+											.setTitle("Member Kicked")
+											.setColor("RED")
+											.addField("Kick Information", `Kicked ID: \`${target.id}\`\nMember Kicked: ${target}\nKicked At: \`${new Date(Date.now())}\`\nModerator: ${message.author}\nKick Reason: \`${reason}\``)
+										logChannel.send({ embed: kickEmbed }).catch(function() {});
+									}
+								});
+							});
+						}).catch(() => {
+							message.channel.send(`Failed to kick \`${target.user.tag}\`.`).catch(function() {});
+						});
+					}).catch(() => {
+						target.kick(`Kicked by ${message.author.tag} for ${reason}`).then(() => {
+							message.channel.send(`***Successfully kicked \`${target.user.tag}\`.***`).catch(function() {});
+						}).catch(() => {
+							message.channel.send(`Failed to kick \`${target.user.tag}\`.`).catch(function() {});
+						});
+					});
+				} else {
+					message.reply("I do not have permission to kick this user.").catch(() => {
+						message.author.send(`You attempted to use the \`kick\` command in ${message.channel}, but I can not chat there.`)
+							.catch(function() {});
+					});
+				}
+			} else {
+				message.reply("That user is too far up in this guild's hierarchy to be kicked by you.").catch(() => {
+					message.author.send(`You attempted to use the \`kick\` command in ${message.channel}, but I can not chat there.`).catch(function() {});
+				});
+			}
+		} else {
+			message.reply("Please mention or supply the id of a valid user.").catch(() => {
+				message.author.send(`You attempted to use the \`kick\` command in ${message.channel}, but I can not chat there.`).catch(function() {});
+			});
+		}
 	} else {
-		reason = message.content.substr(5+prefix.length+args[0].length);
+		message.reply("You do not have permissions to trigger this command.").catch(() => {
+			message.author.send(`You attempted to use the \`kick\` command in ${message.channel}, but I can not chat there.`).catch(function() {});
+		});
 	}
-	if(message.member.hasPermission("KICK_MEMBERS")) {
-		let kickeduser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
-		if(!kickeduser) {
-			marray = message.guild.members.filter(m => RegExp(name, "gi").test(m.displayName));
-			kickeduser = marray.first();
-		}
-		if(!kickeduser) return message.reply("Couldn't find this user!")
-		if(message.member.highestRole.position <= kickeduser.highestRole.position) return message.reply("This user is too high up in this guilds' hierarchy to be kicked by you!");
-		message.guild.member(kickeduser).kick()
-		try {
-		await kickeduser.send(`You were kicked in ${message.guild.name} for \`${reason}\` by ${message.author.username}`)
-			
-		}
-		catch (e) {
-			await message.reply("Couldn't DM this user to tell them they were kicked.")
-		}
-		        			message.react("✅");
-
-	} else return message.reply("You do not have permission to kick members!");
-	return;
 }
-
 module.exports.help = {
 	name: "kick"
 }

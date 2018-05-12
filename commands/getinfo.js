@@ -3,6 +3,9 @@ const rbx = require("roblox-js");
 const request = require('request-promise');
 
 async function getMembership(username) {
+	let channels = dbguild.channels.filter(m => RegExp("wbotdisable-database", "gi").test(m.name));
+	let cmddisablecheck = await checkIfDisabled(bot, message, args, "getinfo", channels)
+	if(cmddisablecheck) return message.reply("This command has been disabled by a server manager!")
 	let response = await request({
 		uri: `https://www.roblox.com/Thumbs/BCOverlay.ashx?username=${username}`,
 		simple: false,
@@ -65,7 +68,7 @@ async function everything(args, message, bot) {
 						m.edit(`**${target.user.tag}'s Roblox Info**\nUsername: \`${username}\`\nUser ID: \`${userid}\`\nFriends: \`${friends.total}/200\`\nMembership: \`${membership}\``)
 					}
 					count = count + 1;
-					if (count == messages.size && count2 == dbchannels.size) return m.edit(`${target.user.tag} is not verified, please tell them to run \`!verify\``);
+					if (count == messages.size && count2 == dbchannels.size) return m.edit(`${target.user.tag} is not verified, please tell them to run \`!!verify\``);
 				});
 			});
 		});
