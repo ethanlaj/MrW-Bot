@@ -90,7 +90,7 @@ bot.on("message", (message) => {
 					if (disableCheck) disableCheck = (disabled.commands.includes(cmd)) ? true : false;
 					if (!disableCheck) {
 						commandFile.run(bot, message, args, prefix, content, permissionLevel);
-					} else message.reply("This command is disabled by an admin in this server!");
+					} else message.reply("This command is disabled by an admin in this server.");
 				}
 			}
 		}
