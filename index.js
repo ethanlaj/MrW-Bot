@@ -96,4 +96,4 @@ bot.on("message", (message) => {
 		}
 	}
 });
-bot.login(botconfig.token);
+bot.login(botconfig.token)
