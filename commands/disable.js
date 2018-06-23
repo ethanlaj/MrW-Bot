@@ -1,9 +1,9 @@
 async function checkIfDisabled(bot, message, args, cmdname, channels) {
-	const nestedMessages = await Promise.all(channels.map(ch => ch.fetchMessages({
+	const nestedMessages = await Promise.all(channels.map((ch) => ch.fetchMessages({
 		limit: 100
 	})));
 	const flatMessages = nestedMessages.reduce((a, b) => a.concat(b));
-	const msg = flatMessages.find(msg => msg.content.startsWith(`${message.guild.id}`));
+	const msg = flatMessages.find((msg) => msg.content.startsWith(`${message.guild.id}`));
 	if (!msg) {
 		return (false);
 	}
@@ -21,11 +21,11 @@ async function checkIfDisabled(bot, message, args, cmdname, channels) {
 	}
 }
 async function findthemessage(bot, message, args, channels) {
-	const nestedMessages = await Promise.all(channels.map(ch => ch.fetchMessages({
+	const nestedMessages = await Promise.all(channels.map((ch) => ch.fetchMessages({
 		limit: 100
 	})));
 	const flatMessages = nestedMessages.reduce((a, b) => a.concat(b));
-	const msg = flatMessages.find(msg => msg.content.startsWith(`${message.guild.id}`));
+	const msg = flatMessages.find((msg) => msg.content.startsWith(`${message.guild.id}`));
 	if (msg) {
 		return (msg);
 	} else {
@@ -43,7 +43,7 @@ module.exports.run = async (bot, message, args) => {
 		limit: 100
 	});
 	if (nodisable.includes(args[0].toLowerCase())) return message.reply("This command cannot be disabled!");
-	let channels = dbguild.channels.filter(m => RegExp("wbotdisable-database", "gi")
+	let channels = dbguild.channels.filter((m) => RegExp("wbotdisable-database", "gi")
 		.test(m.name));
 	var findit = bot.commands.get(args[0].toLowerCase());
 	if (!findit) return message.reply("Not a valid command! Note: You cannot disable a command from its aliases!");
@@ -53,19 +53,19 @@ module.exports.run = async (bot, message, args) => {
 		let anewedit = findmessage.content.replace(args[0].toLowerCase(), "");
 		let newedit = anewedit.replace("  ", " ");
 		await findmessage.edit(newedit);
-		let disabled = bot.databases.disabled.find(value => value.guild === message.guild.id);
+		let disabled = bot.databases.disabled.find((value) => value.guild === message.guild.id);
 		disabled.commands.splice(disabled.commands.indexOf(disabled), 1);
 		message.reply("Re-enabled the command!");
 	}
 	if (!cmddisablecheck) {
 		if (findmessage !== false) {
 			await findmessage.edit(findmessage.content + ` ${args[0].toLowerCase()}`);
-			let disabled = bot.databases.disabled.find(value => value.guild === message.guild.id);
+			let disabled = bot.databases.disabled.find((value) => value.guild === message.guild.id);
 			if (disabled == null) disabled.push({ guild: message.guild.id, commands: [args[0].toLowerCase()] }); else disabled.commands.push(args[0].toLowerCase());
 			await message.reply("Disabled the command!");
 		} else {
 			await channel.send(`${message.guild.id} ${args[0].toLowerCase()}`);
-			let disabled = bot.databases.disabled.find(value => value.guild === message.guild.id);
+			let disabled = bot.databases.disabled.find((value) => value.guild === message.guild.id);
 			if (disabled == null) disabled.push({ guild: message.guild.id, commands: [args[0].toLowerCase()] }); else disabled.commands.push(args[0].toLowerCase());
 			await message.reply("Disabled the command!");
 		}

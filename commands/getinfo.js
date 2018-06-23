@@ -30,16 +30,18 @@ async function everything(args, message, bot) {
 	}
 	if (!target) return message.channel.send("Please **mention** a valid user.");
 	var dbguild = bot.guilds.get("417149156193337344");
-	var dbchannels = dbguild.channels.filter(m => RegExp("roblox-database", "gi").test(m.name));
+	var dbchannels = dbguild.channels.filter((m) => RegExp("roblox-database", "gi").test(m.name));
 	var count = 0;
 	var count2 = 0;
-	message.channel.send("Loading...").then(m => {
-		dbchannels.forEach(dbchannel => {
+	message.channel.send("Loading...").then((m) => {
+		for (let i= 0, len = dbchannels.length; i < len; i++) {
+			const dbchannel = dbchannels[i];
 			count2 = count2 + 1;
 			dbchannel.fetchMessages({
 				limit: 100
-			}).then(messages => {
-				messages.forEach(async msg => {
+			}).then(async (messages) => {
+				for (let i= 0, len = messages.length; i < len; i++) {
+					const msg = messages[i];
 					if (msg.content.startsWith(`${target.id}`)) {
 						count = count - 1;
 						let msgargs = msg.content.split(" ").slice(1);
@@ -66,9 +68,9 @@ async function everything(args, message, bot) {
 					}
 					count = count + 1;
 					if (count == messages.size && count2 == dbchannels.size) return m.edit(`${target.user.tag} is not verified, please tell them to run \`!!verify\``);
-				});
+				}
 			}).catch(function () { });
-		});
+		}
 	}).catch(function () { });
 }
 module.exports.run = async (bot, message, args) => {

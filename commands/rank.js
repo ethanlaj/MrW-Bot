@@ -4,11 +4,11 @@ module.exports.run = async (bot, message, args, prefix, content) => {
 	if (message.member.hasPermission("MANAGE_ROLES")) {
 		if (args[0] === undefined) return message.reply("Please specify an option: `!!rank add/remove/view`").catch(function() {});
 		if (args[0].toLowerCase() === "add") {
-			let role = message.guild.roles.find(role => role.name.toLowerCase().startsWith(args.slice(1).join(" ").toLowerCase()));
+			let role = message.guild.roles.find((role) => role.name.toLowerCase().startsWith(args.slice(1).join(" ").toLowerCase()));
 			if (role != null) {
 				if (role.position >= message.member.highestRole.position) return message.reply("You are not high enough in this guilds hierarchy to add this as a self-assignable role.").catch(function() {});
-				dbChannel.fetchMessages({ limit: 100 }).then(messages => {
-					currentRoles = messages.find(msg => msg.content.startsWith(message.guild.id));
+				dbChannel.fetchMessages({ limit: 100 }).then((messages) => {
+					currentRoles = messages.find((msg) => msg.content.startsWith(message.guild.id));
 					if (currentRoles != null) {
 						if (!currentRoles.content.includes(role.id)) {
 							currentRoles.edit(currentRoles.content + ` ${role.id}`).then(() => {
@@ -31,10 +31,10 @@ module.exports.run = async (bot, message, args, prefix, content) => {
 				});
 			}
 		} else if (args[0].toLowerCase() === "remove") {
-			let role = message.guild.roles.find(role => role.name.toLowerCase().startsWith(args.slice(1).join(" ").toLowerCase()));
+			let role = message.guild.roles.find((role) => role.name.toLowerCase().startsWith(args.slice(1).join(" ").toLowerCase()));
 			if (role != null) {
-				dbChannel.fetchMessages({ limit: 100 }).then(messages => {
-					currentRoles = messages.find(msg => msg.content.startsWith(message.guild.id));
+				dbChannel.fetchMessages({ limit: 100 }).then((messages) => {
+					currentRoles = messages.find((msg) => msg.content.startsWith(message.guild.id));
 					if (currentRoles != null) {
 						if (currentRoles.content.includes(role.id)) {
 							currentRoles.edit(currentRoles.content.replace(` ${role.id}`, "")).then(() => {
@@ -57,21 +57,23 @@ module.exports.run = async (bot, message, args, prefix, content) => {
 				});
 			}
 		} else if (args[0].toLowerCase() === "view") {
-			dbChannel.fetchMessages({ limit: 100 }).then(messages => {
-				currentRoles = messages.find(msg => msg.content.startsWith(message.guild.id));
+			dbChannel.fetchMessages({ limit: 100 }).then((messages) => {
+				currentRoles = messages.find((msg) => msg.content.startsWith(message.guild.id));
 				if (currentRoles != null) {
 					if (currentRoles.content.slice(message.guild.id.length).trim() !== "") {
-						message.channel.send(`These are the self-assignable roles of this guild:\n\`${currentRoles.content.slice(message.guild.id.length).trim().split(" ").map(id => message.guild.roles.get(id).name).join("`,\n`")}\``).catch(function() {});
+						message.channel.send(`These are the self-assignable roles of this guild:\n\`${currentRoles.content.slice(message.guild.id.length).trim().split(" ").map((id) => message.guild.roles.get(id).name).join("`,\n`")}\``).catch(function() {});
 					} else {
 						message.reply("This guild has no self-assignable roles to view.").catch(() => {
 							message.author.send(`You attempted to use the \`rank\` command in ${message.channel}, but I can not chat there.`).catch(function() {});
 						});
 					}
-					currentRoles.content.split(" ").forEach(selfRole => {
+					let canada = currentRoles.content.split(" ");
+					for (let i= 0, len = canada.length; i < len; i++) {
+						const selfRole = canada[i];
 						if (!message.guild.roles.get(selfRole)) {
 							currentRoles.edit(currentRoles.content.replace(` ${selfRole}`, "")).catch(function() {});
 						}
-					});
+					}
 				} else {
 					message.reply("This guild has no self-assignable roles to view.").catch(() => {
 						message.author.send(`You attempted to use the \`rank\` command in ${message.channel}, but I can not chat there.`).catch(function() {});
@@ -89,11 +91,11 @@ module.exports.run = async (bot, message, args, prefix, content) => {
 						message.author.send(`You attempted to use the \`rank\` command in ${message.channel}, but I can not chat there.`).catch(function() {});
 					});
 				} else {
-					dbChannel.fetchMessages({ limit: 100 }).then(messages => {
-						currentRoles = messages.find(msg => msg.content.startsWith(message.guild.id));
+					dbChannel.fetchMessages({ limit: 100 }).then((messages) => {
+						currentRoles = messages.find((msg) => msg.content.startsWith(message.guild.id));
 						if (currentRoles != null) {
 							if (currentRoles.content.slice(message.guild.id.length).trim() !== "") {
-								var desiredRole = currentRoles.content.slice(message.guild.id.length).trim().split(" ").map(role => message.guild.roles.get(role)).find(role => role.name.toLowerCase() == content.toLowerCase());
+								var desiredRole = currentRoles.content.slice(message.guild.id.length).trim().split(" ").map((role) => message.guild.roles.get(role)).find((role) => role.name.toLowerCase() == content.toLowerCase());
 								if (desiredRole != null) {
 									if (message.member.roles.has(desiredRole.id)) {
 										message.member.removeRole(desiredRole).then(() => {
@@ -125,21 +127,23 @@ module.exports.run = async (bot, message, args, prefix, content) => {
 		}
 	} else {
 		if (args[0].toLowerCase() === "view") {
-			dbChannel.fetchMessages({ limit: 100 }).then(messages => {
-				currentRoles = messages.find(msg => msg.content.startsWith(message.guild.id));
+			dbChannel.fetchMessages({ limit: 100 }).then((messages) => {
+				currentRoles = messages.find((msg) => msg.content.startsWith(message.guild.id));
 				if (currentRoles != null) {
 					if (currentRoles.content.slice(message.guild.id.length).trim() !== "") {
-						message.channel.send(`These are the self-assignable roles of this guild:\n\`${currentRoles.content.slice(message.guild.id.length).trim().split(" ").map(id => message.guild.roles.get(id).name).join("`,\n`")}\``).catch(function() {});
+						message.channel.send(`These are the self-assignable roles of this guild:\n\`${currentRoles.content.slice(message.guild.id.length).trim().split(" ").map((id) => message.guild.roles.get(id).name).join("`,\n`")}\``).catch(function() {});
 					} else {
 						message.reply("This guild has no self-assignable roles to view.").catch(() => {
 							message.author.send(`You attempted to use the \`rank\` command in ${message.channel}, but I can not chat there.`).catch(function() {});
 						});
 					}
-					currentRoles.content.split(" ").forEach(selfRole => {
+					let canada = currentRoles.content.split(" ");
+					for (let i= 0, len = canada.length; i < len; i++) {
+						const selfRole = canada[i];
 						if (!message.guild.roles.get(selfRole)) {
 							currentRoles.edit(currentRoles.content.replace(` ${selfRole}`, "")).catch(function() {});
 						}
-					});
+					}
 				} else {
 					message.reply("This guild has no self-assignable roles to view.").catch(() => {
 						message.author.send(`You attempted to use the \`rank\` command in ${message.channel}, but I can not chat there.`).catch(function() {});
@@ -152,11 +156,11 @@ module.exports.run = async (bot, message, args, prefix, content) => {
 					message.author.send(`You attempted to use the \`rank\` command in ${message.channel}, but I can not chat there.`).catch(function() {});
 				});
 			} else {
-				dbChannel.fetchMessages({ limit: 100 }).then(messages => {
-					currentRoles = messages.find(msg => msg.content.startsWith(message.guild.id));
+				dbChannel.fetchMessages({ limit: 100 }).then((messages) => {
+					currentRoles = messages.find((msg) => msg.content.startsWith(message.guild.id));
 					if (currentRoles != null) {
 						if (currentRoles.content.slice(message.guild.id.length).trim() !== "") {
-							var desiredRole = currentRoles.content.slice(message.guild.id.length).trim().split(" ").map(role => message.guild.roles.get(role)).find(role => role.name.toLowerCase() === content.slice(args[0].length).trim().toLowerCase());
+							var desiredRole = currentRoles.content.slice(message.guild.id.length).trim().split(" ").map((role) => message.guild.roles.get(role)).find((role) => role.name.toLowerCase() === content.slice(args[0].length).trim().toLowerCase());
 							if (desiredRole != null) {
 								if (message.member.roles.has(desiredRole.id)) {
 									message.member.removeRole(desiredRole).then(() => {

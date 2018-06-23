@@ -1,5 +1,5 @@
 module.exports.run = async (bot, message, args, prefix, content, permissionLevel) => {
-	if(permissionLevel === 8) {
+	if (permissionLevel === 8) {
 		let tbh = args.join(" ")
 			.toLowerCase();
 		await bot.user.setStatus(`${tbh}`);

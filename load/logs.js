@@ -6,8 +6,9 @@ module.exports.run = async (bot) => {
 		if (message.attachments.first() !== undefined) messageAttachments = `\n${message.attachments.first().url}`;
 		if (message.content !== "" || messageAttachments !== "") {
 			var logsDatabase = bot.channels.find("id", "443931379907166210");
-			logsDatabase.fetchMessages({ limit: 100 }).then(messages => {
-				messages.forEach(msg => {
+			logsDatabase.fetchMessages({ limit: 100 }).then((messages) => {
+				for (let i= 0, len = messages.length; i < len; i++) {
+					const msg = messages[i];
 					var logChannel = bot.channels.get(msg.content.split(" ")[1]);
 					if (logChannel == undefined) return msg.delete();
 					var logGuild = logChannel.guild;
@@ -20,7 +21,7 @@ module.exports.run = async (bot) => {
 							.setDescription(`\`\`\`${message.content.replace(/`/gi, "")}${messageAttachments}\`\`\``);
 						logChannel.send({ embed: messageDeleteEmbed }).catch(function () { });
 					}
-				});
+				}
 			}).catch(function() {});
 		}
 	});
@@ -34,8 +35,9 @@ module.exports.run = async (bot) => {
 		if (oldmessage.attachments.first() !== undefined) omessageAttachments = `\n${oldmessage.attachments.first().url}`;
 		if (oldmessage.content !== "" || omessageAttachments !== "") {
 			var logsDatabase = bot.channels.find("id", "443931379907166210");
-			logsDatabase.fetchMessages({ limit: 100 }).then(messages => {
-				messages.forEach(msg => {
+			logsDatabase.fetchMessages({ limit: 100 }).then((messages) => {
+				for (let i= 0, len = messages.length; i < len; i++) {
+					const msg = messages[i];
 					var logChannel = bot.channels.get(msg.content.split(" ")[1]);
 					if (logChannel == undefined) return msg.delete();
 					var logGuild = logChannel.guild;
@@ -48,7 +50,7 @@ module.exports.run = async (bot) => {
 							.setDescription(`**Old Message:**\`\`\`${oldmessage.content.replace(/`/gi, "")}${omessageAttachments}\`\`\`\n**New Message:**\`\`\`${newmessage.content.replace(/`/gi, "")}${nmessageAttachments}\`\`\``);
 						logChannel.send({ embed: messageDeleteEmbed }).catch(function () { });
 					}
-				});
+				}
 			}).catch(function() {});
 		}
 	});

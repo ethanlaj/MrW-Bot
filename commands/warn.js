@@ -24,8 +24,9 @@ module.exports.run = async (bot, message, args, prefix) => {
 			var olo = await dbchannel.fetchMessages({ limit: 100 });
 			var msgcount = olo.size;
 			var logsDatabase = bot.channels.find("id", "443931379907166210");
-			logsDatabase.fetchMessages({ limit: 100 }).then(logmessages => {
-				logmessages.forEach(msg => {
+			logsDatabase.fetchMessages({ limit: 100 }).then((logmessages) => {
+				for (let i= 0, len = logmessages.length; i < len; i++) {
+					const msg = logmessages[i];
 					var logChannel = bot.channels.get(msg.content.split(" ")[1]);
 					if (logChannel == undefined) return msg.delete();
 					var logGuild = logChannel.guild;
@@ -37,7 +38,7 @@ module.exports.run = async (bot, message, args, prefix) => {
 							.addField("Warn Information", `Warned ID: \`${target.id}\`\nMember Warned: ${target}\nWarned At: \`${new Date(Date.now())}\`\nModerator: ${message.author}\nWarn Reason: \`${reason}\``);
 						logChannel.send({ embed: warnEmbed }).catch(function () { });
 					}
-				});
+				}
 			}).catch(function () { });
 			if (msgcount == "100") {
 				await dbchannel.setName("archived-warn-database");

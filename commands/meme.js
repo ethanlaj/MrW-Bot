@@ -9,7 +9,7 @@ module.exports.run = async (bot, message, args, prefix, content) => {
 			pageSize: 25
 			, pageIndex: ind
 		})
-			.then(result => {
+			.then((result) => {
 				if (result[0]) {
 					var meme = result[Math.floor(Math.random() * result.length)];
 					message.reply(meme);
@@ -18,7 +18,7 @@ module.exports.run = async (bot, message, args, prefix, content) => {
 					resolve(false);
 				}
 			})
-			.catch(err => {
+			.catch((err) => {
 				console.log(err);
 			});
 	});
@@ -27,14 +27,14 @@ module.exports.run = async (bot, message, args, prefix, content) => {
 		pageSize: 25
 		, pageIndex: inde
 	})
-		.then(resulto => {
+		.then((resulto) => {
 			if (!resulto[0]) {
 				return message.reply("Couldn't find memes with this name!");
 			}
 			var memeo = resulto[Math.floor(Math.random() * resulto.length)];
 			message.reply(memeo);
 		})
-		.catch(err => {
+		.catch((err) => {
 			console.log(err);
 		});
 };

@@ -1,6 +1,6 @@
 const Discord = require("discord.js");
 module.exports.run = async (bot, message, args, prefix, content) => {
-	const checker = bot.rateLimits.poll.find(value => value === message.author.id);
+	const checker = bot.rateLimits.poll.find((value) => value === message.author.id);
 	if (checker) return message.reply("You can only use this command once every two minutes!").catch(function () { });
 	bot.rateLimits.poll.push(message.author.id);
 	setTimeout(function () {

@@ -4,7 +4,7 @@ module.exports.run = async (bot, message, args) => {
 	const parameterOne = args[0];
 	const parameterTwo = args[1];
 	if (message.member.hasPermission("KICK_MEMBERS")) {
-		const target = message.guild.members.find(member => parameterOne.includes(member.user.id) || member.user.tag.toLowerCase().startsWith(parameterOne.toLowerCase()));
+		const target = message.guild.members.find((member) => parameterOne.includes(member.user.id) || member.user.tag.toLowerCase().startsWith(parameterOne.toLowerCase()));
 		if (target !== null) {
 			if (message.member.highestRole.position > target.highestRole.position) {
 				if (!target.roles.has(message.guild.roles.find("name", "Muted").id)) {
@@ -13,8 +13,9 @@ module.exports.run = async (bot, message, args) => {
 						if (muteTime >= 10000) {
 							target.addRole(message.guild.roles.find("name", "Muted")).then(() => {
 								var logsDatabase = bot.channels.find("id", "443931379907166210");
-								logsDatabase.fetchMessages({ limit: 100 }).then(logmessages => {
-									logmessages.forEach(msg => {
+								logsDatabase.fetchMessages({ limit: 100 }).then((logmessages) => {
+									for (let i= 0, len = logmessages.length; i < len; i++) {
+										const msg = logmessages[i];
 										var logChannel = bot.channels.get(msg.content.split(" ")[1]);
 										if (logChannel == undefined) return msg.delete();
 										var logGuild = logChannel.guild;
@@ -26,10 +27,10 @@ module.exports.run = async (bot, message, args) => {
 												.addField("Member Information", `Member ID: \`${target.id}\`\nMember Muted: ${target}\nModerator: ${message.author}\nMuted At: \`${new Date(Date.now())}\``);
 											logChannel.send({ embed: muteEmbed }).catch(function () { });
 										}
-									});
+									}
 								}).catch(function () { });
 								message.channel.send(`***Successfully muted \`${target.user.tag}\` for ${ms(muteTime, { long: true })}.***`).catch(function () { });
-								bot.channels.get("443931383866458123").send(`${message.guild.id} ${target.user.id} ${Date.now() + muteTime}`).then(msg => {
+								bot.channels.get("443931383866458123").send(`${message.guild.id} ${target.user.id} ${Date.now() + muteTime}`).then((msg) => {
 									setTimeout(() => {
 										target.removeRole(message.guild.roles.find("name", "Muted")).catch(function () { });
 										msg.delete().catch(function () { });
@@ -43,8 +44,9 @@ module.exports.run = async (bot, message, args) => {
 						target.addRole(message.guild.roles.find("name", "Muted")).then(() => {
 							message.channel.send(`***Successfully muted \`${target.user.tag}\`.***`).catch(function () { });
 							var logsDatabase = bot.channels.get("440238037201453056");
-							logsDatabase.fetchMessages({ limit: 100 }).then(logmessages => {
-								logmessages.forEach(msg => {
+							logsDatabase.fetchMessages({ limit: 100 }).then((logmessages) => {
+								for (let i= 0, len = logmessages.length; i < len; i++) {
+									const msg = logmessages[i];
 									var logChannel = bot.channels.get(msg.content.split(" ")[1]);
 									if (logChannel == undefined) return msg.delete();
 									var logGuild = logChannel.guild;
@@ -56,7 +58,7 @@ module.exports.run = async (bot, message, args) => {
 											.addField("Member Information", `Member ID: \`${target.id}\`\nMember Muted: ${target}\nModerator: ${message.author}\nMuted At: \`${new Date(Date.now())}\``);
 										logChannel.send({ embed: muteEmbed }).catch(function () { });
 									}
-								});
+								}
 							}).catch(function () { });
 						}).catch(function () { });
 					}

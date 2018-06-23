@@ -2,14 +2,14 @@ const Discord = require("discord.js");
 module.exports.run = async (bot, message, args, prefix, content) => {
 	var memberEmbed = new Discord.RichEmbed().setColor("GREEN");
 	var members;
-	if (message.guild.roles.find(r => r.name.toLowerCase().startsWith(content.toLowerCase()))) {
+	if (message.guild.roles.find((r) => r.name.toLowerCase().startsWith(content.toLowerCase()))) {
 		if (content !== "") {
-			members = message.guild.roles.find(r => r.name.toLowerCase().startsWith(content.toLowerCase())).members.map(m => m.user.tag).sort()
-				.map(u => bot.users.find(r => r.tag === u).toString()).join("\n");
-			memberEmbed.setTitle(`Users in ${message.guild.roles.find(r => r.name.toLowerCase().startsWith(content.toLowerCase())).name}`);
+			members = message.guild.roles.find((r) => r.name.toLowerCase().startsWith(content.toLowerCase())).members.map((m) => m.user.tag).sort()
+				.map((u) => bot.users.find((r) => r.tag === u).toString()).join("\n");
+			memberEmbed.setTitle(`Users in ${message.guild.roles.find((r) => r.name.toLowerCase().startsWith(content.toLowerCase())).name}`);
 		} else {
-			members = message.guild.members.map(m => m.user.tag).sort()
-				.map(u => bot.users.find(r => r.tag === u).toString()).join("\n");
+			members = message.guild.members.map((m) => m.user.tag).sort()
+				.map((u) => bot.users.find((r) => r.tag === u).toString()).join("\n");
 			memberEmbed.setTitle("Users");
 		}
 		var membersLength = members.length;
@@ -53,7 +53,7 @@ module.exports.run = async (bot, message, args, prefix, content) => {
 					}
 					memberEmbed = new Discord.RichEmbed().setDescription(membersToSend.join("\n")).setColor("ORANGE")
 						.setFooter(`Page ${page}/${totalPages}`);
-					if (content !== "") memberEmbed.setTitle(`Users in ${message.guild.roles.find(r => r.name.toLowerCase().startsWith(content.toLowerCase())).name}`);
+					if (content !== "") memberEmbed.setTitle(`Users in ${message.guild.roles.find((r) => r.name.toLowerCase().startsWith(content.toLowerCase())).name}`);
 					if (content === "") memberEmbed.setTitle("Users");
 					sentEmbed.edit(memberEmbed).catch(function () { });
 				});

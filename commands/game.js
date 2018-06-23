@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 var games = ["number", "tictactoe", "connect4"];
 async function awaitReply(message, question, limit = 60000) {
-	const filter = m => m.author.id === message.author.id;
+	const filter = (m) => m.author.id === message.author.id;
 	await message.channel.send(`${message.author}, ${question}`);
 	try {
 		const collected = await message.channel.awaitMessages(filter, { max: 1, time: limit, errors: ["time"] });
@@ -71,7 +71,7 @@ module.exports.run = async (bot, message, args) => {
 			var opponent = await awaitReply(message, "Who should your opponent be?", 30000);
 			let target = message.guild.member(opponent.mentions.users.first() || message.guild.members.get(opponent.content));
 			if (!target) {
-				let marray = message.guild.members.filter(m => RegExp(opponent.content, "gi").test(m.displayName));
+				let marray = message.guild.members.filter((m) => RegExp(opponent.content, "gi").test(m.displayName));
 				target = marray.first();
 			}
 			if (!target) return message.reply("Couldn't find that user!");
@@ -86,12 +86,13 @@ module.exports.run = async (bot, message, args) => {
 				var endGame = false;
 				const filter = (reaction, user) => eA.includes(reaction.emoji.name) && user.id == turn[0].id;
 				var reactions = msg.createReactionCollector(filter, { time: 300000 });
-				reactions.on("collect", reaction => {
+				reactions.on("collect", (reaction) => {
 					if (endGame === true) return;
-					eA.forEach(emoji => {
+					for (let i= 0, len = eA.length; i < len; i++) {
+						const emoji = eA[i];
 						if (emoji !== reaction.emoji.name) return;
 						eA.splice(eA.indexOf(emoji), 1, turn[1]);
-					});
+					}
 					function returnWinner(author, message, msg, turn, target) {
 						if (turn == author) {
 							message.edit(msg.content + `\n\n${target} has won the game!`);
@@ -107,7 +108,7 @@ module.exports.run = async (bot, message, args) => {
 						turn = [];
 						turn = [target, "⭕"];
 					}
-					msg.edit(`${eA[0]} | ${eA[1]} | ${eA[2]}\n———————\n${eA[3]} | ${eA[4]} | ${eA[5]}\n———————\n${eA[6]} | ${eA[7]} | ${eA[8]}\n\n${turn[0]}'s turn.`).then(m => {
+					msg.edit(`${eA[0]} | ${eA[1]} | ${eA[2]}\n———————\n${eA[3]} | ${eA[4]} | ${eA[5]}\n———————\n${eA[6]} | ${eA[7]} | ${eA[8]}\n\n${turn[0]}'s turn.`).then((m) => {
 						if (eA[0] == eA[1] && eA[1] == eA[2]) {
 							returnWinner(message.author, m, msg, turn[0], target);
 						} else if (eA[3] == eA[4] && eA[4] == eA[5]) {
@@ -141,7 +142,7 @@ module.exports.run = async (bot, message, args) => {
 						var rows = [eA, ["⚫", "⚫", "⚫", "⚫", "⚫", "⚫", "⚫"], ["⚫", "⚫", "⚫", "⚫", "⚫", "⚫", "⚫"], ["⚫", "⚫", "⚫", "⚫", "⚫", "⚫", "⚫"],
 							["⚫", "⚫", "⚫", "⚫", "⚫", "⚫", "⚫"], ["⚫", "⚫", "⚫", "⚫", "⚫", "⚫", "⚫"], ["⚫", "⚫", "⚫", "⚫", "⚫", "⚫", "⚫"]];
 						var connectFourEmbed = new Discord.RichEmbed().setColor(0x00AE86).setTitle("Connect Four").setFooter(`${message.author.tag}'s turn.`);
-						connectFourEmbed.setDescription(`🔴 = ${message.author.tag}\n🔵 = ${target.tag}\n\n` + rows.map(row => row.join(" ")).join("\n"));
+						connectFourEmbed.setDescription(`🔴 = ${message.author.tag}\n🔵 = ${target.tag}\n\n` + rows.map((row) => row.join(" ")).join("\n"));
 						message.channel.send({ embed: connectFourEmbed }).then(async function (connectFour) {
 							var orderLoop = 0;
 							while (orderLoop != eA.length) {
@@ -151,7 +152,7 @@ module.exports.run = async (bot, message, args) => {
 							var turn = message.author.id;
 							const filter = (reaction, user) => (user.id === message.author.id || user.id === target.id) && eA.includes(reaction.emoji.name);
 							const collector = connectFour.createReactionCollector(filter, { time: 600000 });
-							collector.on("collect", reaction => {
+							collector.on("collect", (reaction) => {
 								reaction.remove(bot.users.get(turn)).catch(function () { });
 								if (reaction.users.last().id === turn) {
 									var currentRow = getRow(rows, eA.indexOf(reaction.emoji.name));
@@ -166,10 +167,12 @@ module.exports.run = async (bot, message, args) => {
 											turn = message.author.id;
 											connectFourEmbed.setFooter(`${message.author.tag}'s turn.`);
 										}
-										connectFour.edit({ embed: connectFourEmbed.setDescription(`🔴 = ${message.author.tag}\n🔵 = ${target.tag}\n\n` + rows.map(row => row.join(" ")).join("\n")) });
+										connectFour.edit({ embed: connectFourEmbed.setDescription(`🔴 = ${message.author.tag}\n🔵 = ${target.tag}\n\n` + rows.map((row) => row.join(" ")).join("\n")) });
 										var noRepeat = false;
-										rows.forEach(function (row, indexOfRow) {
-											row.forEach(function (coin, indexOfCoin) {
+										for (let indexOfRow= 0, len = rows.length; indexOfRow < len; indexOfRow++) {
+											const row = rows[indexOfRow];
+											for (let indexOfCoin= 0, len = row.length; indexOfCoin < len; indexOfCoin++) {
+												const coin = row[indexOfCoin];
 												if (coin !== "⚫" && coin === row[indexOfCoin + 1] &&
 													row[indexOfCoin + 1] === row[indexOfCoin + 2] &&
 													row[indexOfCoin + 2] === row[indexOfCoin + 3]) {
@@ -212,9 +215,9 @@ module.exports.run = async (bot, message, args) => {
 														collector.stop(`${coin} won the game!`);
 													}
 												}
-											});
-										});
-										if (rows.slice(1).map(row => row.every(coin => coin !== "⚫")).every(row => row === true)) {
+											}
+										}
+										if (rows.slice(1).map((row) => row.every((coin) => coin !== "⚫")).every((row) => row === true)) {
 											noRepeat = true;
 											message.channel.send("No one won. It was a draw.").catch(function () { });
 											collector.stop("No one won. It was a draw.");
@@ -242,9 +245,10 @@ module.exports.run = async (bot, message, args) => {
 		}
 	} else {
 		var gameList = "";
-		games.forEach(game => {
+		for (let i= 0, len = games.length; i < len; i++) {
+			const game = games[i];
 			gameList = gameList + `\`${game}\`, `;
-		});
+		}
 		if (input.toLowerCase() !== "that") input = `\`${input}\``;
 		gameList = gameList.slice(0, -2) + ".";
 		message.reply(`${input} is not a valid game option. Possible game choices are: ${gameList}`);

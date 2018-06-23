@@ -3,14 +3,16 @@ module.exports.run = async (bot, message, args) => {
 	let target = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
 	if (!target) return message.channel.send("Please **mention** a valid user.");
 	var dbguild = bot.guilds.get("443929284411654144");
-	var dbchannels = dbguild.channels.filter(m => RegExp("warn-database", "gi").test(m.name));
+	var dbchannels = dbguild.channels.filter((m) => RegExp("warn-database", "gi").test(m.name));
 	var finalmessage = `**Warnings for ${target.user.username}:**\n`;
 	var warningnum = 0;
 	var channelloop = 0;
 	var messageloop = 0;
-	dbchannels.forEach(dbchannel => {
-		dbchannel.fetchMessages({ limit: 100 }).then(messages => {
-			messages.forEach(msg => {
+	for (let i= 0, len = dbchannels.length; i < len; i++) {
+		const dbchannel = dbchannels[i];
+		dbchannel.fetchMessages({ limit: 100 }).then((messages) => {
+			for (let i= 0, len = messages.length; i < len; i++) {
+				const msg = messages[i];
 				if (msg.content.startsWith(`${message.guild.id} ${target.id}`)) {
 					warningnum = warningnum+1;
 					var time = msg.createdAt;
@@ -27,9 +29,9 @@ module.exports.run = async (bot, message, args) => {
 						message.channel.send(finalmessage);
 					}
 				}
-			});
+			}
 		}).catch(function () { });
-	});
+	}
 };
 module.exports.help = {
 	name: "warnings",

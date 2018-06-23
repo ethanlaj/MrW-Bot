@@ -1,5 +1,5 @@
 module.exports.run = async (bot, message, args, prefix, content, permissionLevel) => {
-	if(permissionLevel === 8) {
+	if (permissionLevel === 8) {
 		if (bot.counter === false) {
 			bot.user.setActivity(`${bot.guilds.size} servers`, {
 				type: "WATCHING"

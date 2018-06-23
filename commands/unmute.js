@@ -5,7 +5,7 @@ module.exports.run = async (bot, message, args) => {
 		let tounmute = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
 		var marray;
 		if (!tounmute) {
-			marray = message.guild.members.filter(m => RegExp(name, "gi")
+			marray = message.guild.members.filter((m) => RegExp(name, "gi")
 				.test(m.displayName));
 			tounmute = marray.first();
 		}
@@ -15,8 +15,9 @@ module.exports.run = async (bot, message, args) => {
 		if (tounmute.roles.has(muterole.id)) {
 			tounmute.removeRole(muterole);
 			var logsDatabase = bot.channels.find("id", "443931379907166210");
-			logsDatabase.fetchMessages({ limit: 100 }).then(logmessages => {
-				logmessages.forEach(msg => {
+			logsDatabase.fetchMessages({ limit: 100 }).then((logmessages) => {
+				for (let i= 0, len = logmessages.length; i < len; i++) {
+					const msg = logmessages[i];
 					var logChannel = bot.channels.get(msg.content.split(" ")[1]);
 					if (logChannel == undefined) return msg.delete();
 					var logGuild = logChannel.guild;
@@ -28,7 +29,7 @@ module.exports.run = async (bot, message, args) => {
 							.addField("Unmute Information", `Unmuted ID: \`${tounmute.id}\`\nMember Unmuted: ${tounmute}\nModerator: ${message.author}\nUnmuted At: \`${new Date(Date.now())}\``);
 						logChannel.send({ embed: unmuteEmbed }).catch(function () { });
 					}
-				});
+				}
 			}).catch(function () { });
 			message.react("\u2705");
 		} else return message.reply("This user is not muted!");

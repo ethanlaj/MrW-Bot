@@ -1,6 +1,6 @@
 const Discord = require("discord.js");
 async function awaitReply(message, question, limit = 300000) {
-	const filter = m => m.author.id === message.author.id;
+	const filter = (m) => m.author.id === message.author.id;
 	await message.author.send(question);
 	try {
 		const collected = await message.author.dmChannel.awaitMessages(filter, {
@@ -21,7 +21,7 @@ module.exports.run = async (bot, message) => {
 	let bmessages = await blacklistchannel.fetchMessages({
 		limit: 100
 	});
-	let barray = bmessages.filter(m => RegExp(message.author.id, "gi")
+	let barray = bmessages.filter((m) => RegExp(message.author.id, "gi")
 		.test(m.content));
 	let auser = barray.first();
 	if (auser) return message.reply("You cannot use this command because you are blacklisted!");
@@ -31,7 +31,7 @@ module.exports.run = async (bot, message) => {
 	let ttmessages = await ttchannel.fetchMessages({
 		limit: 100
 	});
-	let darray = ttmessages.filter(m => RegExp(message.author.id, "gi")
+	let darray = ttmessages.filter((m) => RegExp(message.author.id, "gi")
 		.test(m.content));
 	let duser = darray.first();
 	try {

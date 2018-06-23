@@ -1,6 +1,6 @@
 const rbx = require("roblox-js");
 async function awaitReply(message, question, limit = 60000) {
-	const filter = m => m.author.id === message.author.id;
+	const filter = (m) => m.author.id === message.author.id;
 	await message.reply(question);
 	try {
 		const collected = await message.channel.awaitMessages(filter, { max: 1, time: limit, errors: ["time"] });
@@ -47,11 +47,13 @@ async function everything(bot, message) {
 				}]).then(() => {
 					var channelloop = 0;
 					var messageloop = 0;
-					var dbchannels = dbguild.channels.filter(m => RegExp("roblox-database", "gi").test(m.name));
+					var dbchannels = dbguild.channels.filter((m) => RegExp("roblox-database", "gi").test(m.name));
 					dbchannel = dbguild.channels.find("name", "roblox-database");
-					dbchannels.forEach(dbchannel => {
-						dbchannel.fetchMessages({ limit: 100 }).then(messages => {
-							messages.forEach(msg => {
+					for (let i= 0, len = dbchannels.length; i < len; i++) {
+						const dbchannel = dbchannels[i];
+						dbchannel.fetchMessages({ limit: 100 }).then((messages) => {
+							for (let i= 0, len = messages.length; i < len; i++) {
+								const msg = messages[i];
 								if (msg.content.startsWith(`${message.author.id}`)) {
 									msg.delete();
 								}
@@ -63,18 +65,20 @@ async function everything(bot, message) {
 										message.channel.send(`${message.author.id} ${userid}`);
 									}
 								}
-							});
+							}
 						}).catch(function () { });
-					});
+					}
 				}).catch(function () { });
 			} else {
 				var channelloop = 0;
 				var messageloop = 0;
-				var dbchannels = dbguild.channels.filter(m => RegExp("roblox-database", "gi").test(m.name));
+				var dbchannels = dbguild.channels.filter((m) => RegExp("roblox-database", "gi").test(m.name));
 				dbchannel = dbguild.channels.find("name", "roblox-database");
-				dbchannels.forEach(dbchannel2 => {
-					dbchannel2.fetchMessages({ limit: 100 }).then(messages => {
-						messages.forEach(msg => {
+				for (let i= 0, len = dbchannels.length; i < len; i++) {
+					const dbchannel2 = dbchannels[i];
+					dbchannel2.fetchMessages({ limit: 100 }).then((messages) => {
+						for (let i= 0, len = messages.length; i < len; i++) {
+							const msg = messages[i];
 							if (msg.content.startsWith(`${message.author.id}`)) {
 								msg.delete();
 								dbchannel.send(`${message.author.id} ${userid}`);
@@ -88,9 +92,9 @@ async function everything(bot, message) {
 									dbchannel.send(`${message.author.id} ${userid}`);
 								}
 							}
-						});
+						}
 					}).catch(function () { });
-				});
+				}
 			}
 		} else {
 			message.reply(`Could not find the following text: \`${randomstring}\` in your blurb or status, please retry the command.`);

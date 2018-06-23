@@ -1,23 +1,25 @@
 const Discord = require("discord.js");
 module.exports.run = async (bot) => {
-	bot.on("guildMemberAdd", async member => {
+	bot.on("guildMemberAdd", async (member) => {
 		var dbguild = bot.guilds.get("443929284411654144");
-		var dbchannels = dbguild.channels.filter(channel => channel.name.includes("autoroles-database"));
+		var dbchannels = dbguild.channels.filter((channel) => channel.name.includes("autoroles-database"));
 		if (dbchannels != null) {
-			dbchannels.forEach(dbchannel => {
-				dbchannel.fetchMessages({ limit: 100 }).then(messages => {
-					messages.forEach(async msg => {
+			for (let i= 0, len = dbchannels.length; i < len; i++) {
+				const dbchannel = dbchannels[i];
+				dbchannel.fetchMessages({ limit: 100 }).then((messages) => {
+					for (let i= 0, len = messages.length; i < len; i++) {
+						const msg = messages[i];
 						if (msg.content.startsWith(member.guild.id)) {
 							var msgargs = msg.content.split(" ").slice(1);
-							member.addRoles(msgargs.map(role => member.guild.roles.get(role)));
+							member.addRoles(msgargs.map((role) => member.guild.roles.get(role)));
 						}
-					});
+					}
 				}).catch(function() {});
-			});
+			}
 		}
 		var announcerchannel = bot.channels.get("443931378011078666");
 		var announcermsgs = await announcerchannel.fetchMessages({ limit: 100 });
-		var announcermsg = announcermsgs.find(m => m.content.startsWith(member.guild.id));
+		var announcermsg = announcermsgs.find((m) => m.content.startsWith(member.guild.id));
 		if (!announcermsg) return;
 		//guildid | toggle | channel | avatar | footer | hellomsg | goodbyemsg
 		var settings = announcermsg.content;
@@ -71,12 +73,12 @@ module.exports.run = async (bot) => {
 					.catch(function () { });
 			});
 	});
-	bot.on("guildMemberRemove", async member => {
+	bot.on("guildMemberRemove", async (member) => {
 		var announcerchannel = bot.channels.get("443931378011078666");
 		var announcermsgs = await announcerchannel.fetchMessages({
 			limit: 100
 		});
-		var announcermsg = announcermsgs.find(m => m.content.startsWith(member.guild.id));
+		var announcermsg = announcermsgs.find((m) => m.content.startsWith(member.guild.id));
 		if (!announcermsg) return;
 		//guildid | toggle | channel | avatar | footer | hellomsg | goodbyemsg
 		var settings = announcermsg.content;
@@ -124,15 +126,15 @@ module.exports.run = async (bot) => {
 			channeltosend.send({ embed: goodbyeMessage }).catch(function () { });
 		});
 	});
-	bot.on("guildCreate", async guilda => {
+	bot.on("guildCreate", async (guilda) => {
 		let hello = new Discord.RichEmbed()
 			.setTitle("Thanks For Adding Me To Your Server!!")
 			.setColor("#0000ff")
 			.setDescription("Thanks for adding Mr.W Bot to your server he is a very helpful bot! This bot is owned by Windows 10 > MacOS#0001 and was made by the epic @ethanlaj and @gt_c For all the cmds run !!help however if u need any help join our support server https://discord.gg/UC37qGN");
-		let hichannels = guilda.channels.filter(c => c.type === "text");
-		let ahichannels = hichannels.filter(c => c.permissionsFor(bot.user)
+		let hichannels = guilda.channels.filter((c) => c.type === "text");
+		let ahichannels = hichannels.filter((c) => c.permissionsFor(bot.user)
 			.has("READ_MESSAGES"));
-		let fhichannel = ahichannels.filter(c => c.permissionsFor(bot.user)
+		let fhichannel = ahichannels.filter((c) => c.permissionsFor(bot.user)
 			.has("SEND_MESSAGES"));
 		let hichannel = fhichannel.first();
 		if (hichannel) {

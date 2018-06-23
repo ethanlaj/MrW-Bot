@@ -4,16 +4,18 @@ module.exports.run = async (bot, message) => {
 	if (target) {
 		if (message.member.hasPermission("KICK_MEMBERS") || message.member.hasPermission("ADMINISTRATOR") || message.member.hasPermission("BAN_MEMBERS")) {
 			var dbguild = bot.guilds.get("443929284411654144");
-			var dbchannels = dbguild.channels.filter(m => RegExp("warn-database", "gi").test(m.name));
+			var dbchannels = dbguild.channels.filter((m) => RegExp("warn-database", "gi").test(m.name));
 			var warns = [];
 			var warningnum = 0;
 			var channelloop = 0;
 			var messageloop = 0;
-			dbchannels.forEach(dbchannel => {
+			for (let i= 0, len = dbchannels.length; i < len; i++) {
+				const dbchannel = dbchannels[i];
 				dbchannel.fetchMessages({
 					limit: 100
-				}).then(messages => {
-					messages.forEach(msg => {
+				}).then((messages) => {
+					for (let i= 0, len = messages.length; i < len; i++) {
+						const msg = messages[i];
 						if (msg.content.startsWith(`${message.guild.id} ${target.id}`)) {
 							warningnum = warningnum + 1;
 							warns.push(`${dbchannel.id} ${msg.id}`);
@@ -25,21 +27,22 @@ module.exports.run = async (bot, message) => {
 							if (channelloop == dbchannels.size) {
 								if (warningnum == 0) return message.reply("There are no warnings on this user!");
 								var count = 1;
-								message.reply(`Removed warn ${count}/${warningnum} for \`${target.user.tag}\`.`).then(m => {
-									warns.forEach(warn => {
-										dbguild.channels.get(warn.substr(0, 18)).fetchMessage(warn.substr(19)).then(wm => {
+								message.reply(`Removed warn ${count}/${warningnum} for \`${target.user.tag}\`.`).then((m) => {
+									for (let i= 0, len = warns.length; i < len; i++) {
+										const warn = warns[i];
+										dbguild.channels.get(warn.substr(0, 18)).fetchMessage(warn.substr(19)).then((wm) => {
 											wm.delete();
 											if (count == warningnum) return m.edit(`${message.author}, Removed all warnings (${warningnum}) from \`${target.user.tag}\``);
 											m.edit(`${message.author}, Removed warn ${count}/${warningnum} \`${target.user.tag}\``);
 											count = count + 1;
 										}).catch(function() {});
-									});
+									}
 								}).catch(function() {});
 							}
 						}
-					});
+					}
 				}).catch(function() {});
-			});
+			}
 		} else {
 			message.reply("Insufficent permissions.");
 		}
@@ -47,8 +50,9 @@ module.exports.run = async (bot, message) => {
 		message.reply("Please **mention** a valid user.");
 	}
 	var logsDatabase = bot.channels.find("id", "443931379907166210");
-	logsDatabase.fetchMessages({ limit: 100 }).then(logmessages => {
-		logmessages.forEach(msg => {
+	logsDatabase.fetchMessages({ limit: 100 }).then((logmessages) => {
+		for (let i= 0, len = logmessages.length; i < len; i++) {
+			const msg = logmessages[i];
 			var logChannel = bot.channels.get(msg.content.split(" ")[1]);
 			if (logChannel == undefined) return msg.delete();
 			var logGuild = logChannel.guild;
@@ -60,7 +64,7 @@ module.exports.run = async (bot, message) => {
 					.addField("Clear Information", `Member Cleared ID: \`${target.id}\`\nMember Cleared: ${target}\nCleared At: \`${new Date(Date.now())}\`\nModerator: ${message.author}`);
 				logChannel.send({ embed: clearwarnEmbed }).catch(function() {});
 			}
-		});
+		}
 	}).catch(function() {});
 };
 module.exports.help = {

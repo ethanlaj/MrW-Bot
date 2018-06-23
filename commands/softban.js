@@ -4,7 +4,7 @@ module.exports.run = async (bot, message, args, prefix, content) => {
 	const parameterOne = args[0];
 	const parameterTwo = args[1];
 	if (message.member.hasPermission("BAN_MEMBERS")) {
-		const target = message.guild.members.find(m => parameterOne.includes(`${m.user.id}`));
+		const target = message.guild.members.find((m) => parameterOne.includes(`${m.user.id}`));
 		if (target !== null) {
 			if (message.member.highestRole.position > target.highestRole.position) {
 				var reason;
@@ -24,8 +24,9 @@ module.exports.run = async (bot, message, args, prefix, content) => {
 									message.channel.send(`***Successfully softbanned \`${target.user.tag}\`.***`)
 										.catch(function () { });
 									var logsDatabase = bot.channels.find("id", "443931379907166210");
-									logsDatabase.fetchMessages({ limit: 100 }).then(logmessages => {
-										logmessages.forEach(msg => {
+									logsDatabase.fetchMessages({ limit: 100 }).then((logmessages) => {
+										for (let i= 0, len = logmessages.length; i < len; i++) {
+											const msg = logmessages[i];
 											var logChannel = bot.channels.get(msg.content.split(" ")[1]);
 											if (logChannel == undefined) return msg.delete();
 											var logGuild = logChannel.guild;
@@ -37,7 +38,7 @@ module.exports.run = async (bot, message, args, prefix, content) => {
 													.addField("Softban Information", `Softbanned ID: \`${target.id}\`\nMember Softbanned: ${target}\nSoftbanned At: \`${new Date(Date.now())}\`\nModerator: ${message.author}\nSoftban Reason: \`${reason}\``);
 												logChannel.send({ embed: softbanEmbed }).catch(function () { });
 											}
-										});
+										}
 									}).catch(function () { });
 								}).catch(() => {
 									message.reply(`Failed to unban \`${target.user.tag}\`.`)

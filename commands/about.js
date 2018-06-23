@@ -4,7 +4,7 @@ module.exports.run = async (bot, message, args) => {
 	let user = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
 	var marray;
 	if (!user) {
-		marray = message.guild.members.filter(m => RegExp(name, "gi").test(m.displayName));
+		marray = message.guild.members.filter((m) => RegExp(name, "gi").test(m.displayName));
 		user = marray.first();
 	}
 	if (!user) return message.channel.send("Couldn't find this user.");

@@ -2,7 +2,7 @@ module.exports.run = async (bot, message) => {
 	if (!message.member.hasPermission("MANAGE_GUILD")) return message.reply("You don't have permission to use this command!");
 	var logschannel = bot.channels.find("id", "443931379907166210");
 	var msgs = await logschannel.fetchMessages({ limit: 100 });
-	var checker = msgs.find(m => m.content.startsWith(`${message.guild.id}`));
+	var checker = msgs.find((m) => m.content.startsWith(`${message.guild.id}`));
 	if (!checker) {
 		//assume it is disabled
 		if (!message.mentions.channels.first()) return message.reply("You must mention a valid channel!");
