@@ -4,11 +4,9 @@ module.exports.run = async (bot) => {
 		var dbguild = bot.guilds.get("443929284411654144");
 		var dbchannels = dbguild.channels.filter((channel) => channel.name.includes("autoroles-database"));
 		if (dbchannels != null) {
-			for (let i= 0, len = dbchannels.length; i < len; i++) {
-				const dbchannel = dbchannels[i];
+			for (let dbchannel of dbchannels.array()) {
 				dbchannel.fetchMessages({ limit: 100 }).then((messages) => {
-					for (let i= 0, len = messages.length; i < len; i++) {
-						const msg = messages[i];
+					for (let msg of messages.array()) {
 						if (msg.content.startsWith(member.guild.id)) {
 							var msgargs = msg.content.split(" ").slice(1);
 							member.addRoles(msgargs.map((role) => member.guild.roles.get(role)));

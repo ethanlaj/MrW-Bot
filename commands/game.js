@@ -88,8 +88,7 @@ module.exports.run = async (bot, message, args) => {
 				var reactions = msg.createReactionCollector(filter, { time: 300000 });
 				reactions.on("collect", (reaction) => {
 					if (endGame === true) return;
-					for (let i= 0, len = eA.length; i < len; i++) {
-						const emoji = eA[i];
+					for (let emoji of eA) {
 						if (emoji !== reaction.emoji.name) return;
 						eA.splice(eA.indexOf(emoji), 1, turn[1]);
 					}
@@ -245,8 +244,7 @@ module.exports.run = async (bot, message, args) => {
 		}
 	} else {
 		var gameList = "";
-		for (let i= 0, len = games.length; i < len; i++) {
-			const game = games[i];
+		for (let game of games) {
 			gameList = gameList + `\`${game}\`, `;
 		}
 		if (input.toLowerCase() !== "that") input = `\`${input}\``;

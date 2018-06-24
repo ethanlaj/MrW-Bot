@@ -8,11 +8,9 @@ module.exports.run = async (bot, message, args) => {
 	var warningnum = 0;
 	var channelloop = 0;
 	var messageloop = 0;
-	for (let i= 0, len = dbchannels.length; i < len; i++) {
-		const dbchannel = dbchannels[i];
+	for (let dbchannel of dbchannels.array()) {
 		dbchannel.fetchMessages({ limit: 100 }).then((messages) => {
-			for (let i= 0, len = messages.length; i < len; i++) {
-				const msg = messages[i];
+			for (let msg of messages.array()) {
 				if (msg.content.startsWith(`${message.guild.id} ${target.id}`)) {
 					warningnum = warningnum+1;
 					var time = msg.createdAt;

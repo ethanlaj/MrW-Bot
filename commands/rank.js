@@ -67,9 +67,8 @@ module.exports.run = async (bot, message, args, prefix, content) => {
 							message.author.send(`You attempted to use the \`rank\` command in ${message.channel}, but I can not chat there.`).catch(function() {});
 						});
 					}
-					let canada = currentRoles.content.split(" ");
-					for (let i= 0, len = canada.length; i < len; i++) {
-						const selfRole = canada[i];
+					let selfRoles = currentRoles.content.split(" ");
+					for (let selfRole of selfRoles) {
 						if (!message.guild.roles.get(selfRole)) {
 							currentRoles.edit(currentRoles.content.replace(` ${selfRole}`, "")).catch(function() {});
 						}
@@ -137,9 +136,8 @@ module.exports.run = async (bot, message, args, prefix, content) => {
 							message.author.send(`You attempted to use the \`rank\` command in ${message.channel}, but I can not chat there.`).catch(function() {});
 						});
 					}
-					let canada = currentRoles.content.split(" ");
-					for (let i= 0, len = canada.length; i < len; i++) {
-						const selfRole = canada[i];
+					let selfRoles = currentRoles.content.split(" ");
+					for (let selfRole of selfRoles) {
 						if (!message.guild.roles.get(selfRole)) {
 							currentRoles.edit(currentRoles.content.replace(` ${selfRole}`, "")).catch(function() {});
 						}

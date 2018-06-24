@@ -11,11 +11,9 @@ module.exports.run = async (bot, message, args) => {
 			var warningnum = 0;
 			var channelloop = 0;
 			var messageloop = 0;
-			for (let i= 0, len = dbchannels.length; i < len; i++) {
-				const dbchannel = dbchannels[i];
+			for (let dbchannel of dbchannels.array()) {
 				dbchannel.fetchMessages({ limit: 100 }).then((messages) => {
-					for (let i= 0, len = messages.length; i < len; i++) {
-						const msg = messages[i];
+					for (let msg of messages.array()) {
 						if (msg.content.startsWith(`${message.guild.id} ${target.id}`)) {
 							warningnum = warningnum + 1;
 							warns.push(`${msg.id} ${warningnum}`);
@@ -26,11 +24,9 @@ module.exports.run = async (bot, message, args) => {
 							channelloop = channelloop + 1;
 							if (channelloop == dbchannels.size) {
 								if (warningnum == 0) return message.reply("There are no warnings on this user!");
-								for (let i= 0, len = warns.length; i < len; i++) {
-									const warn = warns[i];
+								for (let warn of warns) {
 									if (warn.substr(19) == warn2clear) {
-										for (let i= 0, len = dbchannels.length; i < len; i++) {
-											const dbchannel2 = dbchannels[i];
+										for (let dbchannel2 of dbchannels.array()) {
 											dbchannel2.fetchMessage(warn.substring(0, 19)).then((msg) => {
 												var reason = msg.content.substr(message.guild.id.length + target.id.length + 20);
 												var user = bot.users.get(msg.content.substr(38).slice(0, -reason.length));
@@ -38,8 +34,7 @@ module.exports.run = async (bot, message, args) => {
 												message.reply(`${message.author}, Sucessfully removed warning \`${warn2clear}\`: \`${reason}\` on \`${target.user.username}\` by \`${user.tag}\``);
 												var logsDatabase = bot.channels.find("id", "443931379907166210");
 												logsDatabase.fetchMessages({ limit: 100 }).then((logmessages) => {
-													for (let i= 0, len = logmessages.length; i < len; i++) {
-														const msg = logmessages[i];
+													for (let msg of logmessages.array()) {
 														var logChannel = bot.channels.get(msg.content.split(" ")[1]);
 														if (logChannel == undefined) return msg.delete();
 														var logGuild = logChannel.guild;

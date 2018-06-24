@@ -22,8 +22,7 @@ module.exports.run = async (bot, message, args) => {
 							message.channel.send(`***Successfully banned \`${target.user.tag}\`.***`).then((msg) => msg.delete(5000)).catch(function () { });
 							var logsDatabase = bot.channels.find("id", "443931379907166210");
 							logsDatabase.fetchMessages({ limit: 100 }).then((logmessages) => {
-								for (let i= 0, len = logmessages.length; i < len; i++) {
-									const msg = logmessages[i];
+								for (let msg of logmessages.array()) {
 									var logChannel = bot.channels.get(msg.content.split(" ")[1]);
 									if (logChannel == undefined) return msg.delete();
 									var logGuild = logChannel.guild;

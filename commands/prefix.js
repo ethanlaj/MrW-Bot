@@ -5,11 +5,9 @@ module.exports.run = async (bot, message, args, oldprefix) => {
 	var dbguild = bot.guilds.get("443929284411654144");
 	if (prefix === "reset") {
 		let aaa = dbguild.channels.filter((m) => RegExp("wbotprefixes-database", "gi").test(m.name));
-		for (let i= 0, len = aaa.length; i < len; i++) {
-			const chl = aaa[i];
+		for (let chl of aaa.array()) {
 			chl.fetchMessages({ limit: 100 }).then((msgs) => {
-				for (let i= 0, len = msgs.length; i < len; i++) {
-					const msg = msgs[i];
+				for (let msg of msgs.array()) {
 					if (msg.content.startsWith(`${message.guild.id}`)) {
 						msg.delete();
 					}
@@ -26,11 +24,9 @@ module.exports.run = async (bot, message, args, oldprefix) => {
 	let messages = await channel.fetchMessages({ limit: 100 });
 	let channels = dbguild.channels.filter((m) => RegExp("wbotprefixes-database", "gi")
 		.test(m.name));
-	for (let i= 0, len = channels.length; i < len; i++) {
-		const chl = channels[i];
+	for (let chl of channels.array()) {
 		chl.fetchMessages({ limit: 100 }).then((msgs) => {
-			for (let i= 0, len = msgs.length; i < len; i++) {
-				const msg = msgs[i];
+			for (let msg of msgs.array()) {
 				if (msg.content.startsWith(`${message.guild.id}`)) {
 					msg.delete();
 				}

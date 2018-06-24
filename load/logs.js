@@ -7,8 +7,7 @@ module.exports.run = async (bot) => {
 		if (message.content !== "" || messageAttachments !== "") {
 			var logsDatabase = bot.channels.find("id", "443931379907166210");
 			logsDatabase.fetchMessages({ limit: 100 }).then((messages) => {
-				for (let i= 0, len = messages.length; i < len; i++) {
-					const msg = messages[i];
+				for (let msg of messages.array()) {
 					var logChannel = bot.channels.get(msg.content.split(" ")[1]);
 					if (logChannel == undefined) return msg.delete();
 					var logGuild = logChannel.guild;
@@ -36,8 +35,7 @@ module.exports.run = async (bot) => {
 		if (oldmessage.content !== "" || omessageAttachments !== "") {
 			var logsDatabase = bot.channels.find("id", "443931379907166210");
 			logsDatabase.fetchMessages({ limit: 100 }).then((messages) => {
-				for (let i= 0, len = messages.length; i < len; i++) {
-					const msg = messages[i];
+				for (let msg of messages.array()) {
 					var logChannel = bot.channels.get(msg.content.split(" ")[1]);
 					if (logChannel == undefined) return msg.delete();
 					var logGuild = logChannel.guild;

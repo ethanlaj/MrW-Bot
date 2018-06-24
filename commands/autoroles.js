@@ -6,14 +6,12 @@ module.exports.run = async (bot, message, args, prefix, content) => {
 	var count2 = 0;
 	var msgargs;
 	if (args[0] === "view") {
-		for (let i= 0, len = dbchannels.length; i < len; i++) {
-			const dbchannel = dbchannels[i];
+		for (let dbchannel of dbchannels.array()) {
 			count2 = count2 + 1;
 			dbchannel.fetchMessages({
 				limit: 100
 			}).then((messages) => {
-				for (let i= 0, len = messages.length; i < len; i++) {
-					const msg = messages[i];
+				for (let msg of messages.array()) {
 					if (msg.content.startsWith(`${message.guild.id}`) && msg.content.length != `${message.guild.id}`.length) {
 						count = count - 1;
 						msgargs = msg.content.split(" ").slice(1);
@@ -28,8 +26,7 @@ module.exports.run = async (bot, message, args, prefix, content) => {
 		if (args[1] != undefined) {
 			var roleToSet = message.guild.roles.find((role) => role.name.toLowerCase() === content.substr(args[0].length+1).toLowerCase());
 			if (roleToSet !== null) {
-				for (let i= 0, len = dbchannels.length; i < len; i++) {
-					const dbchannel = dbchannels[i];
+				for (let dbchannel of dbchannels.array()) {
 					count2 = count2 + 1;
 					dbchannel.fetchMessages({
 						limit: 100
@@ -75,8 +72,7 @@ module.exports.run = async (bot, message, args, prefix, content) => {
 		if (args[1] !== undefined) {
 			var roleToDel = message.guild.roles.find((role) => role.name.toLowerCase() === content.substr(args[0].length+1).toLowerCase());
 			if (roleToDel !== null) {
-				for (let i= 0, len = dbchannels.length; i < len; i++) {
-					const dbchannel = dbchannels[i];
+				for (let dbchannel of dbchannels.array()) {
 					count2 = count2 + 1;
 					dbchannel.fetchMessages({
 						limit: 100

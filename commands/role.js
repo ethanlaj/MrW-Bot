@@ -76,9 +76,8 @@ module.exports.run = async (bot, message, args, prefix, content) => {
 							message.channel
 								.send(`Changing roles for people in the \`${roleTarget.name}\` role with the \`${roleToChangeFromTarget.name}\` role.`)
 								.catch(function() {});
-							let canada = roleTarget.members;
-							for (let i= 0, len = canada.length; i < len; i++) {
-								const member = canada[i];
+							let members = roleTarget.members;
+							for (let member of members.array()) {
 								if (roles[1].startsWith("-")) {
 									if (member.roles.has(roleToChangeFromTarget.id)) {
 										member.removeRole(roleToChangeFromTarget).catch(function() {});
@@ -126,9 +125,8 @@ module.exports.run = async (bot, message, args, prefix, content) => {
 					if (usersToRole !== 0) {
 						if (usersToRole > 100) timeEstimate = "This may take some time.";
 						message.channel.send(`Changing roles for \`${usersToRole}\` members. ${timeEstimate}`).catch(function() {});
-						let canada = message.guild.members;
-						for (let i= 0, len = canada.length; i < len; i++) {
-							const member = canada[i];
+						let members = message.guild.members;
+						for (let member of members.array()) {
 							if (paramaterTwo.startsWith("-")) {
 								if (member.roles.has(roleTarget.id)) {
 									member.removeRole(roleTarget).catch(function() {});
@@ -170,9 +168,8 @@ module.exports.run = async (bot, message, args, prefix, content) => {
 					if (usersToRole !== 0) {
 						if (usersToRole > 100) timeEstimate = "This may take some time.";
 						message.channel.send(`Changing roles for \`${usersToRole}\` members. ${timeEstimate}`).catch(function() {});
-						let canada = message.guild.members.filter((m) => !m.user.bot);
-						for (let i= 0, len = canada.length; i < len; i++) {
-							const member = canada[i];
+						let members = message.guild.members.filter((m) => !m.user.bot);
+						for (let member of members.array()) {
 							if (paramaterTwo.startsWith("-")) {
 								if (member.roles.has(roleTarget.id)) {
 									member.removeRole(roleTarget).catch(function() {});
@@ -209,9 +206,8 @@ module.exports.run = async (bot, message, args, prefix, content) => {
 					if (usersToRole !== 0) {
 						if (usersToRole > 100) timeEstimate = "This may take some time.";
 						message.channel.send(`Changing roles for \`${usersToRole}\` members. ${timeEstimate}`).catch(function() {});
-						let canada = message.guild.members.filter((m) => m.user.bot);
-						for (let i= 0, len = canada.length; i < len; i++) {
-							const member = canada[i];
+						let members = message.guild.members.filter((m) => m.user.bot);
+						for (let member of members.array()) {
 							if (paramaterTwo.startsWith("-")) {
 								if (member.roles.has(roleTarget.id)) {
 									member.removeRole(roleTarget).catch(function() {});
@@ -247,9 +243,8 @@ module.exports.run = async (bot, message, args, prefix, content) => {
 							message.channel
 								.send(`Changing roles for people not in the \`${roleTarget.name}\` role with the \`${roleToChangeFromTarget.name}\` role.`)
 								.catch(function() {});
-							let canada = message.guild.members;
-							for (let i= 0, len = canada.length; i < len; i++) {
-								const member = canada[i];
+							let members = message.guild.members;
+							for (let member of members.array()) {
 								if (roleTarget.members.find((m) => member.user.id === m.user.id) === null) {
 									if (roles[1].startsWith("-")) {
 										if (member.roles.has(roleToChangeFromTarget.id)) {

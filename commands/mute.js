@@ -14,8 +14,7 @@ module.exports.run = async (bot, message, args) => {
 							target.addRole(message.guild.roles.find("name", "Muted")).then(() => {
 								var logsDatabase = bot.channels.find("id", "443931379907166210");
 								logsDatabase.fetchMessages({ limit: 100 }).then((logmessages) => {
-									for (let i= 0, len = logmessages.length; i < len; i++) {
-										const msg = logmessages[i];
+									for (let msg of logmessages.array()) {
 										var logChannel = bot.channels.get(msg.content.split(" ")[1]);
 										if (logChannel == undefined) return msg.delete();
 										var logGuild = logChannel.guild;
@@ -45,8 +44,7 @@ module.exports.run = async (bot, message, args) => {
 							message.channel.send(`***Successfully muted \`${target.user.tag}\`.***`).catch(function () { });
 							var logsDatabase = bot.channels.get("440238037201453056");
 							logsDatabase.fetchMessages({ limit: 100 }).then((logmessages) => {
-								for (let i= 0, len = logmessages.length; i < len; i++) {
-									const msg = logmessages[i];
+								for (let msg of logmessages.array()) {
 									var logChannel = bot.channels.get(msg.content.split(" ")[1]);
 									if (logChannel == undefined) return msg.delete();
 									var logGuild = logChannel.guild;

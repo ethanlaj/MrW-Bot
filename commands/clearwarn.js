@@ -9,13 +9,11 @@ module.exports.run = async (bot, message) => {
 			var warningnum = 0;
 			var channelloop = 0;
 			var messageloop = 0;
-			for (let i= 0, len = dbchannels.length; i < len; i++) {
-				const dbchannel = dbchannels[i];
+			for (let dbchannel of dbchannels.array()) {
 				dbchannel.fetchMessages({
 					limit: 100
 				}).then((messages) => {
-					for (let i= 0, len = messages.length; i < len; i++) {
-						const msg = messages[i];
+					for (let msg of messages.array()) {
 						if (msg.content.startsWith(`${message.guild.id} ${target.id}`)) {
 							warningnum = warningnum + 1;
 							warns.push(`${dbchannel.id} ${msg.id}`);
@@ -28,8 +26,7 @@ module.exports.run = async (bot, message) => {
 								if (warningnum == 0) return message.reply("There are no warnings on this user!");
 								var count = 1;
 								message.reply(`Removed warn ${count}/${warningnum} for \`${target.user.tag}\`.`).then((m) => {
-									for (let i= 0, len = warns.length; i < len; i++) {
-										const warn = warns[i];
+									for (let warn of warns) {
 										dbguild.channels.get(warn.substr(0, 18)).fetchMessage(warn.substr(19)).then((wm) => {
 											wm.delete();
 											if (count == warningnum) return m.edit(`${message.author}, Removed all warnings (${warningnum}) from \`${target.user.tag}\``);
@@ -51,8 +48,7 @@ module.exports.run = async (bot, message) => {
 	}
 	var logsDatabase = bot.channels.find("id", "443931379907166210");
 	logsDatabase.fetchMessages({ limit: 100 }).then((logmessages) => {
-		for (let i= 0, len = logmessages.length; i < len; i++) {
-			const msg = logmessages[i];
+		for (let msg of logmessages.array()) {
 			var logChannel = bot.channels.get(msg.content.split(" ")[1]);
 			if (logChannel == undefined) return msg.delete();
 			var logGuild = logChannel.guild;
