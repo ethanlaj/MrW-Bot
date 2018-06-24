@@ -18,6 +18,7 @@
     "discord.js": "11.3.0",
     "eslint": "^4.19.1",
     "eslint-plugin-json": "^1.2.0",
+    "eslint-plugin-no-for-each": "github:ethanlaj/eslint-plugin-no-for-each",
     "eslint-plugin-promise": "^3.8.0",
     "get-meme-urls": "1.0.1",
     "google": "2.1.0",
