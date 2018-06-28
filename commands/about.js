@@ -7,6 +7,7 @@ function isSnowflake(str) {
 module.exports = {
 	help: {
 		name: "about",
+		aliases: ["userinfo"],
 		description: "Gets information about a server member",
 		type: "Information"
 	},
