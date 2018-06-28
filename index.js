@@ -72,6 +72,8 @@ bot.on("message", (message) => {
 				prefix = bot.databases.prefixes.find((value) => value.guild === message.guild.id);
 			prefix = (prefix != null) ? prefix.prefix : botconfig.prefix;
 			cmd = cmd.slice(prefix.length);
+			var mentionMatch = message.content.match(/^<@!?419881218784493588>/);
+			// Checks if content starts with bot mention
 			var permissionLevel = bot.getPermissionLevel(message.author);
 			if (message.content.startsWith(prefix)) {
 				var commandFile = bot.commands.enabledCommands.find((command) => command.help.name === cmd || (command.help.aliases || []).includes(cmd));
@@ -83,12 +85,8 @@ bot.on("message", (message) => {
 						commandFile.run(bot, message, args, prefix, content, permissionLevel);
 					} else message.reply("This command is disabled by an admin in this server!");
 				}
-			} else if (message.content.startsWith(`<@!${bot.user.id}>`) || message.content.startsWith(`<@${bot.user.id}>`)) {
-				if (message.content.startsWith(`<@${bot.user.id}>`)) {
-					message.content = message.content.replace(`<@${bot.user.id}> `, `${prefix}`);
-				} else if (message.content.startsWith(`<@!${bot.user.id}>`)) {
-					message.content = message.content.replace(`<@!${bot.user.id}> `, `${prefix}`);
-				}
+			} else if (mentionMatch != null) {
+				message.content = message.content.replace(mentionMatch[0], `${prefix}`);
 				var commandFile = bot.commands.enabledCommands.find((command) => command.help.name === cmd || (command.help.aliases || []).includes(cmd));
 				if (commandFile != null) {
 					const disabled = bot.databases.disabled.find((value) => value.guild === message.guild.id);
