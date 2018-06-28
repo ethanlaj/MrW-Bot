@@ -87,7 +87,7 @@ bot.on("message", (message) => {
 				}
 			} else if (mentionMatch != null) {
 				message.content = message.content.replace(mentionMatch[0], `${prefix}`);
-				messageArray = message.content.split(" ");
+				var messageArray = message.content.split(" ");
 				args = messageArray.slice(1);
 				content = args.join(" ");
 				prefix = mentionMatch[0];
