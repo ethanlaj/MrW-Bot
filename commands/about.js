@@ -1,5 +1,4 @@
 const { RichEmbed, GuildMember } = require("discord.js");
-
 module.exports = {
 	help: {
 		name: "about",
