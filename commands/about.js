@@ -20,8 +20,8 @@ module.exports = {
 				.addField("Discriminator", user.discriminator, true)
 				.addField("User ID", user.id, true)
 				.addField("Status", userStatus, true)
-				.addField("Joined At", member.joinedAt, true)
-				.addField("Registered At", user.createdAt, true);
+				.addField("Joined At", member.joinedAt.toString().slice(0, -3), true)
+				.addField("Registered At", user.createdAt.toString().slice(0, -3), true);
 			message.channel.send({ embed: aboutEmbed });
 		} else {
 			message.reply("Invalid user. Please specify a username/id from this server or a user id from elsewhere.");
