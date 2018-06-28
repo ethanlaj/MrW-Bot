@@ -7,7 +7,7 @@ module.exports = {
 		type: "Information"
 	},
 	run: async (bot, message, args) => {
-		var member = message.members.find((member) => (args[0] || "").includes(member.id) || (args[0] || "").startsWith(member.displayName));
+		var member = message.guild.members.find((member) => (args[0] || "").includes(member.id) || (args[0] || "").startsWith(member.displayName));
 		if (member == null) member = await bot.fetchUser(args[0]);
 		var user = (member instanceof GuildMember) ? member.user : member;
 		if (user != null) {
