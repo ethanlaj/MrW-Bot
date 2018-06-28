@@ -87,6 +87,11 @@ bot.on("message", (message) => {
 				}
 			} else if (mentionMatch != null) {
 				message.content = message.content.replace(mentionMatch[0], `${prefix}`);
+				var messageArray = message.content.split(" "),
+					args = messageArray.slice(1),
+					content = args.join(" "),
+					prefix = mentionMatch[0],
+					cmd = cmd.slice(prefix.length);
 				var commandFile = bot.commands.enabledCommands.find((command) => command.help.name === cmd || (command.help.aliases || []).includes(cmd));
 				if (commandFile != null) {
 					const disabled = bot.databases.disabled.find((value) => value.guild === message.guild.id);
