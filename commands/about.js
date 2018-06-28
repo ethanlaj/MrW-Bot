@@ -1,27 +1,30 @@
-const Discord = require("discord.js");
-module.exports.run = async (bot, message, args) => {
-	let name = args[0];
-	let user = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
-	var marray;
-	if (!user) {
-		marray = message.guild.members.filter((m) => RegExp(name, "gi").test(m.displayName));
-		user = marray.first();
+const { RichEmbed, GuildMember } = require("discord.js");
+module.exports = {
+	help: {
+		name: "about",
+		description: "Gets information about a server member",
+		type: "Information"
+	},
+	run: async (bot, message, args) => {
+		var name = args[0];
+		var member = message.members.find((member) => (args[0] || "").includes(member.id) || (args[0] || "").startsWith(member.displayName));
+		if (member == null) member = await bot.fetchUser(args[0]);
+		var user = (member instanceof GuildMember) ? member.user : member;
+		if (user != null) {
+			var userStatus = (user.presence.status === "dnd") ? "do not disturb" : user.presence.status;
+			const aboutEmbed = new RichEmbed()
+				.setTitle("User Information")
+				.setColor(0x00AE86)
+				.setThumbnail(user.displayAvatarURL)
+				.addField("Username", user.username, true)
+				.addField("Discriminator", user.discriminator, true)
+				.addField("User ID", user.id, true)
+				.addField("Status", userStatus, true)
+				.addField("Joined At", member.joinedAt, true)
+				.addField("Registered At", user.createdAt, true);
+			message.channel.send({ embed: aboutEmbed });
+		} else {
+			message.reply("Invalid user. Please specify a username/id from this server or a user id from elsewhere.");
+		}
 	}
-	if (!user) return message.channel.send("Couldn't find this user.");
-	let usericon = user.user.avatarURL;
-	let ab = new Discord.RichEmbed()
-		.setTitle("User Information")
-		.setColor("#000080")
-		.setThumbnail(usericon)
-		.addField("Username", user.user.username)
-		.addField("Discriminator", user.user.discriminator)
-		.addField("User ID", user.user.id)
-		.addField("Joined At", user.joinedAt)
-		.addField("Registered At", user.user.createdAt);
-	return message.channel.send({ embed: ab });
-};
-module.exports.help = {
-	name: "about",
-	description: "Gets information about a server member",
-	type: "Information"
 };
