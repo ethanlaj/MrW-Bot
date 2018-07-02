@@ -25,8 +25,8 @@ module.exports = {
 				.addField("Discriminator", user.discriminator, true)
 				.addField("User ID", user.id, true)
 				.addField("Status", userStatus, true)
-				.addField("Joined At", member.joinedAt.toString().slice(0, -15), true)
 				.addField("Registered At", user.createdAt.toString().slice(0, -15), true);
+			if (member != null) aboutEmbed.addField("Joined At", member.joinedAt.toString().slice(0, -15), true);
 			message.channel.send({ embed: aboutEmbed });
 		} else message.reply("Invalid user. Please specify a username/id from this server or a user id from elsewhere.");
 	}
