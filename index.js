@@ -72,7 +72,7 @@ bot.on("message", (message) => {
 				prefix = bot.databases.prefixes.find((value) => value.guild === message.guild.id);
 			prefix = (prefix != null) ? prefix.prefix : botconfig.prefix;
 			cmd = cmd.slice(prefix.length);
-			var mentionMatch = message.content.match(/^<@!?419881218784493588>/);
+			var mentionMatch = message.content.match(new RegExp(`^<@!?${bot.user.id}>`, ""));
 			// Checks if content starts with bot mention
 			var permissionLevel = bot.getPermissionLevel(message.author);
 			if (message.content.startsWith(prefix)) {
