@@ -222,7 +222,7 @@ module.exports.run = (bot, message, args) => {
 		.setTitle(`Date/Time In ${search.toUpperCase()}`)
 		.setColor("ORANGE")
 		.addField("Time", `${hours}:${date.getMinutes()} ${timeOfDay}`)
-		.addField("Date", `${date.getMonth()}/${date.getDate()}/${date.getFullYear()}`)
+		.addField("Date", `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`)
 		.setFooter(`Ran by ${message.author.tag}`);
 	message.channel.send(timeEmbed);
 };
