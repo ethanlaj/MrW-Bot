@@ -1,3 +1,4 @@
+const Discord = require("discord.js");
 module.exports.run = (bot, message, args) => {
 	if (!args[0]) return message.reply("You must provide a timezone!");
 	var search = args[0].toLowerCase();
@@ -205,11 +206,25 @@ module.exports.run = (bot, message, args) => {
 	if (search === ("yekt")) offSet = 5;
 	if (search === ("z")) offSet = 0;
 	if (!offSet) return message.reply("Time-zone not found or not supported at this time!");
-	console.log(offSet);
 	offSet *= 3600000;
-	console.log(offSet);
-	message.channel.send(new Date(Date.now() + offSet).toString()
-	);
+	var date = new Date(Date.now() + offSet);
+	var hours;
+	var timeOfDay;
+	if (date.getHours > 12) {
+		hours = date.getHours() - 12;
+		timeOfDay = "PM";
+	} else {
+		hours = date.getHours();
+		timeOfDay = "AM";
+	}
+	console.log(date.toString());
+	var timeEmbed = new Discord.RichEmbed()
+		.setTitle(`Date/Time In ${search.toUpperCase()}`)
+		.setColor("ORANGE")
+		.addField("Time", `${hours}:${date.getMinutes()} ${timeOfDay}`)
+		.addField("Date", `${date.getMonth()}/${date.getDate()}/${date.getFullYear()}`)
+		.setFooter(`Ran by ${message.author.tag}`);
+	message.channel.send(timeEmbed);
 };
 module.exports.help = {
 	name: "time",
