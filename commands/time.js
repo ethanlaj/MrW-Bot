@@ -217,11 +217,14 @@ module.exports.run = (bot, message, args) => {
 		hours = date.getHours();
 		timeOfDay = "AM";
 	}
-	console.log(date.toString());
+	var minutes = date.getMinutes();
+	if (date.getMinutes() < 10) {
+		minutes = "0" + date.getMinutes();
+	}
 	var timeEmbed = new Discord.RichEmbed()
 		.setTitle(`Date/Time In ${search.toUpperCase()}`)
 		.setColor("ORANGE")
-		.addField("Time", `${hours}:${date.getMinutes()} ${timeOfDay}`)
+		.addField("Time", `${hours}:${minutes} ${timeOfDay}`)
 		.addField("Date", `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`)
 		.setFooter(`Ran by ${message.author.tag}`);
 	message.channel.send(timeEmbed);
