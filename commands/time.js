@@ -210,7 +210,7 @@ module.exports.run = (bot, message, args) => {
 	var date = new Date(Date.now() + offSet);
 	var hours;
 	var timeOfDay;
-	if (date.getHours > 12) {
+	if (date.getHours() > 12) {
 		hours = date.getHours() - 12;
 		timeOfDay = "PM";
 	} else {
