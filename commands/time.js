@@ -208,14 +208,11 @@ module.exports.run = (bot, message, args) => {
 	if (!offSet) return message.reply("Time-zone not found or not supported at this time!");
 	offSet *= 3600000;
 	var date = new Date(Date.now() + offSet);
-	var hours;
-	var timeOfDay;
+	var hours = date.getHours();
+	var timeOfDay = "AM";
 	if (date.getHours() > 12) {
 		hours = date.getHours() - 12;
 		timeOfDay = "PM";
-	} else {
-		hours = date.getHours();
-		timeOfDay = "AM";
 	}
 	if (hours === 0) hours = 12;
 	var minutes = date.getMinutes();
