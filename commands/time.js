@@ -217,6 +217,7 @@ module.exports.run = (bot, message, args) => {
 		hours = date.getHours();
 		timeOfDay = "AM";
 	}
+	if (hours === 0) hours = 12;
 	var minutes = date.getMinutes();
 	if (date.getMinutes() < 10) {
 		minutes = "0" + date.getMinutes();
