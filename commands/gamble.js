@@ -12,6 +12,9 @@ module.exports.run = (bot, message, args) => {
 	if (gambleAmount <= 10) return message.reply("Gamble amount must be greater than 10!").catch(() => {
 		message.author.send(`You attempted to use the \`gamble\` command in ${message.channel}, but I can not chat there.`).catch(function () { });
 	});
+	if (gambleAmount > bot.getCoins(message.author)) return message.reply("You don't have enough coins to do this!").catch(() => {
+		message.author.send(`You attempted to use the \`gamble\` command in ${message.channel}, but I can not chat there.`).catch(function () { });
+	});
 	if (((Math.random() * 10) < 4)) {
 		bot.changeCoins(message.author, gambleAmount).then(() => {
 			bot.rateLimits.gamble.push(message.author.id);
