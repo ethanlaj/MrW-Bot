@@ -16,4 +16,9 @@ module.exports.run = async (bot) => {
 		guild = commands.shift();
 		bot.databases.disabled.push({ guild: guild, commands: commands });
 	}
+	bot.channels.get("465574897049927685").fetchMessages({limit: 100}).then((coins) => {
+		for (let msg of coins.array()) {
+			bot.databases.coins.push({ msg: msg, user: msg.content.split(" ")[0].trim(), coins: msg.content.split(" ")[1].trim() });
+		}
+	});
 };

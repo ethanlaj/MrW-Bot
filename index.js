@@ -5,8 +5,8 @@ const bot = new Discord.Client({ disableEveryone: true, fetchAllMembers: true })
 bot.counter = false;
 bot.commands = { enabledCommands: new Discord.Collection(), disabledCommands: [] };
 bot.allcommands = new Discord.Collection();
-bot.rateLimits = { poll: [], report: [], afk: [] };
-bot.databases = { disabled: [], prefixes: [] };
+bot.rateLimits = { poll: [], report: [], afk: [], collect: [], gamble: [] };
+bot.databases = { disabled: [], prefixes: [], coins: [] };
 bot.loaders = { enabledLoaders: [], disabledLoaders: [] };
 
 var loadFile = fs.readdirSync(__dirname + "/load");
