@@ -18,7 +18,7 @@ module.exports.run = async (bot) => {
 	}
 	bot.channels.get("465574897049927685").fetchMessages({limit: 100}).then((coins) => {
 		for (let msg of coins.array()) {
-			bot.databases.coins.push({ msg: msg, user: msg.content.split(" ")[0].trim(), coins: msg.content.split(" ")[1].trim() });
+			bot.databases.coins.push({ msg: msg, user: msg.content.split(" ")[0].trim(), coins: Number(msg.content.split(" ")[1].trim()) });
 		}
 	});
 };
