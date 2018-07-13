@@ -30,25 +30,17 @@ module.exports.run = async (bot) => {
 		if (channelsetting === "none") return;
 		var himessage;
 		if (hellomsg !== "none") {
-			himessage = hellomsg.replace(/{user.mention}/gi, member.user.toString());
-			himessage = himessage.replace(/{user}/gi, member.user.toString());
-			himessage = himessage.replace(/{user.tag}/gi, member.user.tag);
-			himessage = himessage.replace(/{user.discriminator}/gi, member.user.discriminator);
-			himessage = himessage.replace(/{user.discrim}/gi, member.user.discriminator);
-			himessage = himessage.replace(/{user.username}/gi, member.user.username);
-			himessage = himessage.replace(/{user.name}/gi, member.user.username);
-			himessage = himessage.replace(/{user.nickname}/gi, member.displayName);
-			himessage = himessage.replace(/{user.nick}/gi, member.displayName);
-			himessage = himessage.replace(/{user.id}/gi, member.user.id);
-			himessage = himessage.replace(/{user.status}/gi, member.user.presence.status);
-			if (member.user.presence.game) {
-				himessage = himessage.replace(/{user.game}/gi, member.user.presence.game.name);
-			} else {
-				himessage = himessage.replace(/{user.game}/gi, "None");
-			}
-			himessage = himessage.replace(/{guild.id}/gi, member.guild.id);
-			himessage = himessage.replace(/{guild.name}/gi, member.guild.name);
-			himessage = himessage.replace(/{guild.membercount}/gi, member.guild.memberCount.toString());
+			himessage = hellomsg.replace(/{user((\.|-| )(mention))?}/gi, member.user.toString());
+			himessage = himessage.replace(/{user(\.|-| )tag}/gi, member.user.tag);
+			himessage = himessage.replace(/{user(\.|-| )discrim(inator)?}/gi, member.user.discriminator);
+			himessage = himessage.replace(/{user(\.|-| )(user)?name}/gi, member.user.username);
+			himessage = himessage.replace(/{user(\.|-| )nick(name)?}/gi, member.displayName);
+			himessage = himessage.replace(/{user(\.|-| )id}/gi, member.user.id);
+			himessage = himessage.replace(/{user(\.|-| )status}/gi, member.user.presence.status);
+			himessage = himessage.replace(/{user(\.|-| )game}/gi, (member.user.presence.game || { name: "none" }).name);
+			himessage = himessage.replace(/{guild(\.|-| )id}/gi, member.guild.id);
+			himessage = himessage.replace(/{guild(\.|-| )name}/gi, member.guild.name);
+			himessage = himessage.replace(/{guild(\.|-| )membercount}/gi, member.guild.memberCount.toString());
 		} else {
 			himessage = `Welcome to ${member.guild.name}, ${member.user.toString()}! Have a good time here!`;
 		}
@@ -89,25 +81,17 @@ module.exports.run = async (bot) => {
 		if (channelsetting === "none") return;
 		var byemessage;
 		if (byemsg !== "none") {
-			byemessage = byemsg.replace(/{user.mention}/gi, member.user.toString());
-			byemessage = byemessage.replace(/{user}/gi, member.user.toString());
-			byemessage = byemessage.replace(/{user.tag}/gi, member.user.tag);
-			byemessage = byemessage.replace(/{user.discriminator}/gi, member.user.discriminator);
-			byemessage = byemessage.replace(/{user.discrim}/gi, member.user.discriminator);
-			byemessage = byemessage.replace(/{user.username}/gi, member.user.username);
-			byemessage = byemessage.replace(/{user.name}/gi, member.user.username);
-			byemessage = byemessage.replace(/{user.nickname}/gi, member.displayName);
-			byemessage = byemessage.replace(/{user.nick}/gi, member.displayName);
-			byemessage = byemessage.replace(/{user.id}/gi, member.user.id);
-			byemessage = byemessage.replace(/{user.status}/gi, member.user.presence.status);
-			if (member.user.presence.game) {
-				byemessage = byemessage.replace(/{user.game}/gi, member.user.presence.game.name);
-			} else {
-				byemessage = byemessage.replace(/{user.game}/gi, "None");
-			}
-			byemessage = byemessage.replace(/{guild.id}/gi, member.guild.id);
-			byemessage = byemessage.replace(/{guild.name}/gi, member.guild.name);
-			byemessage = byemessage.replace(/{guild.membercount}/gi, member.guild.memberCount.toString());
+			byemessage = byemsg.replace(/{user((\.|-| )(mention))?}/gi, member.user.toString());
+			byemessage = byemessage.replace(/{user(\.|-| )tag}/gi, member.user.tag);
+			byemessage = byemessage.replace(/{user(\.|-| )discrim(inator)?}/gi, member.user.discriminator);
+			byemessage = byemessage.replace(/{user(\.|-| )(user)?name}/gi, member.user.username);
+			byemessage = byemessage.replace(/{user(\.|-| )nick(name)?}/gi, member.displayName);
+			byemessage = byemessage.replace(/{user(\.|-| )id}/gi, member.user.id);
+			byemessage = byemessage.replace(/{user(\.|-| )status}/gi, member.user.presence.status);
+			byemessage = byemessage.replace(/{user(\.|-| )game}/gi, ( member.user.presence.game || { name: "none" }).name);
+			byemessage = byemessage.replace(/{guild(\.|-| )id}/gi, member.guild.id);
+			byemessage = byemessage.replace(/{guild(\.|-| )name}/gi, member.guild.name);
+			byemessage = byemessage.replace(/{guild(\.|-| )membercount}/gi, member.guild.memberCount.toString());
 		} else {
 			byemessage = `Sad to see you leave ${member.user.toString()}.`;
 		}
