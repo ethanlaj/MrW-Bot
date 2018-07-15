@@ -38,9 +38,7 @@ module.exports.run = async (bot, message, args) => {
         message.channel.send({
             embed: new RichEmbed()
                 .setTitle("Access Denied")
-                .setDescription("
-x1\nYou don't have permission to use this command.
-")
+                .setDescription("x1\nYou don't have permission to use this command.")
                 .setColor("RED")
         });
     }
