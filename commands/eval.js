@@ -11,6 +11,7 @@ function clean(text, token) {
 
 var allowed = ["399975738008141824"];
 module.exports.run = async (bot, message, args) => {
+	console.log('fuc')
 	if (allowed.includes(message.author.id)) {
 		try {
 			var code = args.join(" ");
