@@ -23,7 +23,7 @@ module.exports = {
 						.addField("Sky", `${result.current.skytext}.`, true)
 						.addField("Last Updated", result.current.observationtime, true)
 						.addField("Windspeed", `${result.current.windspeed}.`, true)
-						.setColor(0x00AE86)
+						.setColor(0x00AE86);
 					message.channel.send({ embed: weatherEmbed });
 				} else message.channel.send("Could not find the area given.");
 			});
