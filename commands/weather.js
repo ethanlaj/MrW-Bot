@@ -6,7 +6,7 @@ module.exports = {
 		name: "weather",
 		description: "Displays the weather in the area given",
 		aliases: ["w"],
-		category: "Information
+		category: "Information"
 	},
 	run: async (call) => {
 		var area = call.params.readParam(true);
