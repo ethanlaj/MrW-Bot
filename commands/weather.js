@@ -8,8 +8,8 @@ module.exports = {
 		aliases: ["w"],
 		category: "Information"
 	},
-	run: async (call) => {
-		var area = call.params.readParam(true);
+	run: async (_, message, _, _, content) => {
+		var area = content;
 		if (area) {
 			weather.find({ search: area, degreeType: "F" }, (err, result) => {
 				if (err) console.warn(err.stack);
@@ -24,10 +24,10 @@ module.exports = {
 						.addField("Last Updated", result.current.observationtime, true)
 						.addField("Windspeed", `${result.current.windspeed}.`, true)
 						.setColor(0x00AE86)
-						.setDefaultFooter(call.message.author);
-					call.safeSend(null, call.message, { embed: weatherEmbed });
-				} else call.safeSend("Could not find the area given.");
+						.setFooter(`${{m`);
+					message.channel.send({ embed: weatherEmbed });
+				} else message.channel.send("Could not find the area given.");
 			});
-		} else call.safeSend("Please specify an area to view the weather in.");
+		} else message.reply("Please specify an area to view the weather in.");
 	}
 };
