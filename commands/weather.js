@@ -8,7 +8,7 @@ module.exports = {
 		aliases: ["w"],
 		category: "Information"
 	},
-	run: async (_, message, _, _, content) => {
+	run: async (_1, message, _2, _3, content) => {
 		var area = content;
 		if (area) {
 			weather.find({ search: area, degreeType: "F" }, (err, result) => {
