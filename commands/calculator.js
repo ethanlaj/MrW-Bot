@@ -3,10 +3,10 @@ const math = require("mathjs");
 
 module.exports = {
 	help: {
-    name: "calculator",
-    aliases: ["math", "calc", "c"],
-    description: "Allows you to run math equations"
-  },
+		name: "calculator",
+		aliases: ["math", "calc", "c"],
+		description: "Allows you to run math equations"
+	},
 	run: async (_1, message, _2, _3, content) => {
 		var expression = content;
 		var mathEmbed = new RichEmbed();
