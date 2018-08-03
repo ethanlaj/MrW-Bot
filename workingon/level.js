@@ -14,7 +14,6 @@ async function checkRank(bot, message, args, persontolookfor, channels) {
 			return (msgarray)
 			}
 		}
-	}
 module.exports.run = async (bot, message, args, prefix, content) => {
 	let channels = dbguild.channels.filter(m => RegExp("rank-database", "gi").test(m.name));
 	if(!message.mentions.members.first()) {

@@ -13,8 +13,7 @@
 	},
 	"plugins": [
 		"json",
-		"promise",
-		"no-for-each"
+		"promise"
 	],
 	"rules": {
 		"max-len": [
@@ -46,8 +45,6 @@
 			"always"
 		],
 		"arrow-parens": ["error", "always"],
-		"no-for-each/no-for-each": "error",
-		"no-for-each/no-for-in": "error",
 		"promise/no-return-wrap": "error",
 		"promise/param-names": "error",
 		"promise/catch-or-return": "off",
