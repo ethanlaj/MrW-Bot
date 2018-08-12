@@ -23,7 +23,7 @@ module.exports.run = async (bot, message, args, prefix, content) => {
 								message.guild.unban(target.user, `Softbanned by ${message.author.tag} for ${reason}`).then(() => {
 									message.channel.send(`***Successfully softbanned \`${target.user.tag}\`.***`)
 										.catch(function () { });
-									var logsDatabase = bot.channels.find("id", "443931379907166210");
+									var logsDatabase = bot.channels.get("443931379907166210");
 									logsDatabase.fetchMessages({ limit: 100 }).then((logmessages) => {
 										for (let msg of logmessages.array()) {
 											var logChannel = bot.channels.get(msg.content.split(" ")[1]);

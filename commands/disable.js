@@ -38,7 +38,7 @@ module.exports.run = async (bot, message, args) => {
 	if (!args[0]) return message.reply("You must provide the name of the command to enable/disable. Please try again.");
 	//if(args[0] === "disable" || "help") return message.reply("This command cannot be disabled!")
 	let dbguild = bot.guilds.get("443929284411654144");
-	let channel = dbguild.channels.find("name", "wbotdisable-database");
+	let channel = dbguild.channels.find((m) => m.name === "wbotdisable-database");
 	let messages = await channel.fetchMessages({
 		limit: 100
 	});
@@ -73,7 +73,7 @@ module.exports.run = async (bot, message, args) => {
 	if (messages.size > 97) {
 		await channel.setName("o-wbotdisable-database");
 		await dbguild.createChannel("wbotdisable-database");
-		let newc = dbguild.channels.find("name", "wbotdisable-database");
+		let newc = dbguild.channels.find((m) => m.name === "wbotdisable-database");
 		await newc.overwritePermissions(channel.guild.id, {
 			READ_MESSAGES: false
 		});

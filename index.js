@@ -8,7 +8,7 @@ bot.allcommands = new Discord.Collection();
 bot.rateLimits = { poll: [], report: [], afk: [], collect: [], gamble: [] };
 bot.databases = { disabled: [], prefixes: [], coins: [] };
 bot.loaders = { enabledLoaders: [], disabledLoaders: [] };
-
+bot.defaultPrefix = botconfig.prefix;
 var loadFile = fs.readdirSync(__dirname + "/load");
 
 for (let file of loadFile) {
@@ -56,42 +56,43 @@ bot.on("ready", async () => {
 	console.log(`${bot.user.tag} is online. ` +
 		`${bot.commands.enabledCommands.size}/${bot.commands.enabledCommands.size + bot.commands.disabledCommands.length}` +
 		" commands loaded successfully.");
-	let canada = bot.loaders.enabledLoaders;
-	for (let i= 0, len = canada.length; i < len; i++) {
-		const loader = canada[i];
+	let loaders = bot.loaders.enabledLoaders;
+	for (let loader of loaders) {
 		if (loader.run != null) loader.run(bot);
 	}
 });
 
 bot.on("message", (message) => {
 	if (message.channel.type !== "dm" && !message.author.bot) {
-		var cmd = message.content.split(" ")[0].toLowerCase();
-		if (cmd != null) {
-			var args = message.content.split(" ").slice(1),
+		var rawPrefix = bot.databases.prefixes.find((value) => value.guild === message.guild.id);
+		var prefix = (rawPrefix != undefined) ? rawPrefix.prefix : bot.defaultPrefix;
+		var permissionLevel = bot.getPermissionLevel(message.author);
+		if (message.content.startsWith(prefix)) {
+			let args = message.content.split(" ").slice(1),
 				content = args.join(" "),
-				prefix = bot.databases.prefixes.find((value) => value.guild === message.guild.id);
-			prefix = (prefix != null) ? prefix.prefix : botconfig.prefix;
-			cmd = cmd.slice(prefix.length);
-			var mentionMatch = message.content.match(new RegExp(`^<@!?${bot.user.id}>`, ""));
-			// Checks if content starts with bot mention
-			var permissionLevel = bot.getPermissionLevel(message.author);
-			if (message.content.startsWith(prefix)) {
-				var commandFile = bot.commands.enabledCommands.find((command) => command.help.name === cmd || (command.help.aliases || []).includes(cmd));
-				if (commandFile != null) {
-					const disabled = bot.databases.disabled.find((value) => value.guild === message.guild.id);
-					var disableCheck = (disabled == null) ? false : true;
-					if (disableCheck) disableCheck = (disabled.commands.includes(cmd)) ? true : false;
-					if (!disableCheck) {
-						commandFile.run(bot, message, args, prefix, content, permissionLevel);
-					} else message.reply("This command is disabled by an admin in this server!");
-				}
-			} else if (mentionMatch != null) {
-				message.content = message.content.replace(mentionMatch[0], `${prefix}`);
-				var messageArray = message.content.split(" ");
-				args = messageArray.slice(1);
-				content = args.join(" ");
-				prefix = mentionMatch[0];
-				cmd = cmd.slice(prefix.length);
+				cmd = message.content.split(" ")[0].toLowerCase().slice(prefix.length);
+			var commandFile = bot.commands.enabledCommands.find((command) => command.help.name === cmd || (command.help.aliases || []).includes(cmd));
+			if (commandFile != null) {
+				const disabled = bot.databases.disabled.find((value) => value.guild === message.guild.id);
+				var disableCheck = (disabled == null) ? false : true;
+				if (disableCheck) disableCheck = (disabled.commands.includes(cmd)) ? true : false;
+				if (!disableCheck) {
+					commandFile.run(bot, message, args, prefix, content, permissionLevel);
+				} else message.reply("This command is disabled by an admin in this server!");
+			}
+		} else if (new RegExp(`^<@!?${bot.user.id}>`, "").test(message.content)) {
+			let args = message.content.split(" "),
+				mention = args[0];
+			args.shift();
+			if (!args[0]) return;
+			let cmd = message.content.split(" ")[1].toLowerCase().slice(mention + 1);
+			commandFile = bot.commands.enabledCommands.get(cmd);
+			if (commandFile != null) {
+				message.mentions.members.delete(bot.user.id);
+				message.mentions.users.delete(bot.user.id);
+				message.content = message.content.replace(`${mention} `, prefix);
+				args.shift();
+				let content = args.join(" ");
 				commandFile = bot.commands.enabledCommands.find((command) => command.help.name === cmd || (command.help.aliases || []).includes(cmd));
 				if (commandFile != null) {
 					const disabled = bot.databases.disabled.find((value) => value.guild === message.guild.id);
@@ -102,6 +103,7 @@ bot.on("message", (message) => {
 					} else message.reply("This command is disabled by an admin in this server!");
 				}
 			}
+
 		}
 	}
 });

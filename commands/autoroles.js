@@ -44,7 +44,7 @@ module.exports.run = async (bot, message, args, prefix, content) => {
 							}
 							count = count + 1;
 							if (count == messages.size && count2 == dbchannels.size) {
-								dbguild.channels.find("name", "autoroles-database").fetchMessages({ limit: 100}).then((messagesFetched) => {
+								dbguild.channels.find((m) => m.name === "autoroles-database").fetchMessages({ limit: 100}).then((messagesFetched) => {
 									if (messagesFetched >= 100) {
 										dbguild.createChannel("autoroles-database", "text", [{
 											id: dbguild.id,
@@ -53,7 +53,7 @@ module.exports.run = async (bot, message, args, prefix, content) => {
 											newdbchannel.send(`${message.guild.id} ${roleToSet.id}`).catch(function() {});
 										}).catch(function() {});
 									} else {
-										dbguild.channels.find("name", "autoroles-database").send(`${message.guild.id} ${roleToSet.id}`).then(() => {
+										dbguild.channels.find((m) => m.name === "autoroles-database").send(`${message.guild.id} ${roleToSet.id}`).then(() => {
 											message.reply(`The \`${roleToSet.name}\` role is now an autorole for this server.`).catch(function() {});
 										}).catch(function() {});
 									}

@@ -20,10 +20,10 @@ module.exports.run = async (bot, message, args, prefix) => {
 				await message.reply("Couldn't DM this user about their warning!");
 			}
 			var dbguild = bot.guilds.get("443929284411654144");
-			var dbchannel = dbguild.channels.find("name", "warn-database");
+			var dbchannel = dbguild.channels.find((m) => m.name === "warn-database");
 			var olo = await dbchannel.fetchMessages({ limit: 100 });
 			var msgcount = olo.size;
-			var logsDatabase = bot.channels.find("id", "443931379907166210");
+			var logsDatabase = bot.channels.get("443931379907166210");
 			logsDatabase.fetchMessages({ limit: 100 }).then((logmessages) => {
 				for (let msg of logmessages.array()) {
 					var logChannel = bot.channels.get(msg.content.split(" ")[1]);
@@ -47,7 +47,7 @@ module.exports.run = async (bot, message, args, prefix) => {
 					deny: ["READ_MESSAGES"],
 					allow: []
 				}]).then(() => {
-					dbchannel = dbguild.channels.find("name", "warn-database");
+					dbchannel = dbguild.channels.find((m) => m.name === "warn-database");
 					dbchannel.setParent("443931006437949440");
 					dbchannel.send(`${message.guild.id} ${target.id} ${message.author.id} ${reason}`);
 				}).catch(function () { });

@@ -7,12 +7,12 @@ module.exports.run = async (bot, message, args) => {
 		const target = message.guild.members.find((member) => parameterOne.includes(member.user.id) || member.user.tag.toLowerCase().startsWith(parameterOne.toLowerCase()));
 		if (target !== null) {
 			if (message.member.highestRole.position > target.highestRole.position) {
-				if (!target.roles.has(message.guild.roles.find("name", "Muted").id)) {
+				if (!target.roles.has(message.guild.roles.find((m) => m.name === "Muted").id)) {
 					if (parameterTwo !== undefined) var muteTime = ms(parameterTwo);
 					if (muteTime) {
 						if (muteTime >= 10000) {
-							target.addRole(message.guild.roles.find("name", "Muted")).then(() => {
-								var logsDatabase = bot.channels.find("id", "443931379907166210");
+							target.addRole(message.guild.roles.find((m) => m.name === "Muted")).then(() => {
+								var logsDatabase = bot.channels.get("443931379907166210");
 								logsDatabase.fetchMessages({ limit: 100 }).then((logmessages) => {
 									for (let msg of logmessages.array()) {
 										var logChannel = bot.channels.get(msg.content.split(" ")[1]);
@@ -31,7 +31,7 @@ module.exports.run = async (bot, message, args) => {
 								message.channel.send(`***Successfully muted \`${target.user.tag}\` for ${ms(muteTime, { long: true })}.***`).catch(function () { });
 								bot.channels.get("443931383866458123").send(`${message.guild.id} ${target.user.id} ${Date.now() + muteTime}`).then((msg) => {
 									setTimeout(() => {
-										target.removeRole(message.guild.roles.find("name", "Muted")).catch(function () { });
+										target.removeRole(message.guild.roles.find((m) => m.name === "Muted")).catch(function () { });
 										msg.delete().catch(function () { });
 									}, muteTime);
 								}).catch(function () { });
@@ -40,7 +40,7 @@ module.exports.run = async (bot, message, args) => {
 							message.reply("The time to mute the user must be at least 10 seconds.").catch(function () { });
 						}
 					} else {
-						target.addRole(message.guild.roles.find("name", "Muted")).then(() => {
+						target.addRole(message.guild.roles.find((m) => m.name === "Muted")).then(() => {
 							message.channel.send(`***Successfully muted \`${target.user.tag}\`.***`).catch(function () { });
 							var logsDatabase = bot.channels.get("440238037201453056");
 							logsDatabase.fetchMessages({ limit: 100 }).then((logmessages) => {

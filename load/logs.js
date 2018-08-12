@@ -5,7 +5,7 @@ module.exports.run = async (bot) => {
 		var messageAttachments = "";
 		if (message.attachments.first() !== undefined) messageAttachments = `\n${message.attachments.first().url}`;
 		if (message.content !== "" || messageAttachments !== "") {
-			var logsDatabase = bot.channels.find("id", "443931379907166210");
+			var logsDatabase = bot.channels.get("443931379907166210");
 			logsDatabase.fetchMessages({ limit: 100 }).then((messages) => {
 				for (let msg of messages.array()) {
 					var logChannel = bot.channels.get(msg.content.split(" ")[1]);
@@ -33,7 +33,7 @@ module.exports.run = async (bot) => {
 		var nmessageAttachments = "";
 		if (oldmessage.attachments.first() !== undefined) omessageAttachments = `\n${oldmessage.attachments.first().url}`;
 		if (oldmessage.content !== "" || omessageAttachments !== "") {
-			var logsDatabase = bot.channels.find("id", "443931379907166210");
+			var logsDatabase = bot.channels.get("443931379907166210");
 			logsDatabase.fetchMessages({ limit: 100 }).then((messages) => {
 				for (let msg of messages.array()) {
 					var logChannel = bot.channels.get(msg.content.split(" ")[1]);

@@ -50,7 +50,7 @@ module.exports.run = async (bot) => {
 			.setDescription(himessage);
 		if (footersetting === "true") welcomeMessage.setFooter(`${member.guild.name} is now at ${member.guild.memberCount} members!`);
 		if (avatarsetting === "true") welcomeMessage.setThumbnail(member.user.displayAvatarURL);
-		var channeltosend = bot.channels.find("id", channelsetting);
+		var channeltosend = bot.channels.get(channelsetting);
 		if (!channeltosend) return;
 		channeltosend.send({
 			embed: welcomeMessage
@@ -101,7 +101,7 @@ module.exports.run = async (bot) => {
 			.setDescription(byemessage);
 		if (footersetting === "true") goodbyeMessage.setFooter(`${member.guild.name} is now at ${member.guild.memberCount} members!`);
 		if (avatarsetting === "true") goodbyeMessage.setThumbnail(member.user.displayAvatarURL);
-		var channeltosend = bot.channels.find("id", channelsetting);
+		var channeltosend = bot.channels.get(channelsetting);
 		if (!channeltosend) return;
 		channeltosend.send({ embed: goodbyeMessage }).catch(() => {
 			goodbyeMessage.setThumbnail(null);

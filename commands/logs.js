@@ -1,6 +1,6 @@
 module.exports.run = async (bot, message) => {
 	if (!message.member.hasPermission("MANAGE_GUILD")) return message.reply("You don't have permission to use this command!");
-	var logschannel = bot.channels.find("id", "443931379907166210");
+	var logschannel = bot.channels.get("443931379907166210");
 	var msgs = await logschannel.fetchMessages({ limit: 100 });
 	var checker = msgs.find((m) => m.content.startsWith(`${message.guild.id}`));
 	if (!checker) {

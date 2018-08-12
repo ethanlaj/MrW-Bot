@@ -16,9 +16,9 @@ module.exports.run = async (bot, message, args, prefix, content) => {
 	if (message.member.hasPermission("MANAGE_ROLES")) {
 		if (target !== null) {
 			var rolesToChange = roles.map((roleToMap) => message.guild.roles.find((r) => r.name.toLowerCase().startsWith(roleToMap.toLowerCase())));
-			var rolesToRemove = rolesToChange.filter((role) => role !== null).filter((role) => target.roles.find("name", role.name))
+			var rolesToRemove = rolesToChange.filter((role) => role !== null).filter((role) => target.roles.find((m) => m.name === role.name))
 				.filter((role) => message.member.highestRole.position > role.position && message.guild.me.highestRole.position > role.position);
-			var rolesToAdd = rolesToChange.filter((role) => role !== null).filter((role) => !target.roles.find("name", role.name))
+			var rolesToAdd = rolesToChange.filter((role) => role !== null).filter((role) => !target.roles.find((m) => m.name === role.name))
 				.filter((role) => message.member.highestRole.position > role.position && message.guild.me.highestRole.position > role.position);
 			var messageToSend = "";
 			if (rolesToAdd.length !== 0) {

@@ -1,6 +1,6 @@
 module.exports.run = async (bot, message, args, prefix, content) => {
 	var currentRoles;
-	const dbChannel = bot.guilds.get("443929284411654144").channels.find("name", "rank-database");
+	const dbChannel = bot.guilds.get("443929284411654144").channels.find((m) => m.name === "rank-database");
 	if (message.member.hasPermission("MANAGE_ROLES")) {
 		if (args[0] === undefined) return message.reply("Please specify an option: `!!rank add/remove/view`").catch(function() {});
 		if (args[0].toLowerCase() === "add") {

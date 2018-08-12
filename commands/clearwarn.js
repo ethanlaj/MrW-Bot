@@ -46,7 +46,7 @@ module.exports.run = async (bot, message) => {
 	} else {
 		message.reply("Please **mention** a valid user.");
 	}
-	var logsDatabase = bot.channels.find("id", "443931379907166210");
+	var logsDatabase = bot.channels.get("443931379907166210");
 	logsDatabase.fetchMessages({ limit: 100 }).then((logmessages) => {
 		for (let msg of logmessages.array()) {
 			var logChannel = bot.channels.get(msg.content.split(" ")[1]);
