@@ -1,6 +1,9 @@
 const botconfig = require("./botconfig.js");
 const Discord = require("discord.js");
 const fs = require("fs");
+const util = require("util");
+var cleverio = require("cleverbot.io"),
+	cleverbot = new cleverio(process.env.CLEVER_USER, process.env.CLEVER_KEY);
 const bot = new Discord.Client({ disableEveryone: true, fetchAllMembers: true });
 bot.counter = false;
 bot.commands = { enabledCommands: new Discord.Collection(), disabledCommands: [] };
@@ -11,6 +14,10 @@ bot.loaders = { enabledLoaders: [], disabledLoaders: [] };
 bot.defaultPrefix = botconfig.prefix;
 var loadFile = fs.readdirSync(__dirname + "/load");
 
+cleverio.prototype.askAsync = util.promisify(cleverbot.ask);
+cleverbot.create(function (err, session) {
+	cleverbot.setNick(session);
+});
 for (let file of loadFile) {
 	try {
 		let loader = require("./load/" + file);
@@ -62,7 +69,7 @@ bot.on("ready", async () => {
 	}
 });
 
-bot.on("message", (message) => {
+bot.on("message", async (message) => {
 	if (message.channel.type !== "dm" && !message.author.bot) {
 		var rawPrefix = bot.databases.prefixes.find((value) => value.guild === message.guild.id);
 		var prefix = (rawPrefix != undefined) ? rawPrefix.prefix : bot.defaultPrefix;
@@ -102,8 +109,15 @@ bot.on("message", (message) => {
 						commandFile.run(bot, message, args, prefix, content, permissionLevel);
 					} else message.reply("This command is disabled by an admin in this server!");
 				}
+			} else {
+				let search = message.content.split(" ");
+				search.shift();
+				search = args.join(" ");
+				await message.channel.startTyping();
+				var response = await cleverbot.askAsync(search);
+				await message.channel.stopTyping();
+				message.reply(response);
 			}
-
 		}
 	}
 });
