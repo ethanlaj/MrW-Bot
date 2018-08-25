@@ -2,7 +2,7 @@ const Discord = require("discord.js");
 var google = require("google");
 google.resultsPerPage = 51;
 module.exports.run = async (bot, message, args, prefix, content) => {
-	if (!message.channel.nsfw) return message.reply("You can only use this command in channels marked as NSFW!");
+	if (!message.channel.nsfw && !bot.databases.risk.find((m) => m.guild === message.guild.id)) return message.reply("You can only use this command in channels marked as NSFW! You can enable these types of commands with the `..allowrisk` command.");
 	if (!args[0]) return message.reply("You must provide a search query!");
 	google(content, function (err, res) {
 		if (err) console.error(err);

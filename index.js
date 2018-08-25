@@ -9,7 +9,7 @@ bot.counter = false;
 bot.commands = { enabledCommands: new Discord.Collection(), disabledCommands: [] };
 bot.allcommands = new Discord.Collection();
 bot.rateLimits = { poll: [], report: [], afk: [], collect: [], gamble: [] };
-bot.databases = { disabled: [], prefixes: [], coins: [] };
+bot.databases = { disabled: [], prefixes: [], coins: [], risk: []};
 bot.loaders = { enabledLoaders: [], disabledLoaders: [] };
 bot.defaultPrefix = botconfig.prefix;
 var loadFile = fs.readdirSync(__dirname + "/load");
@@ -113,9 +113,9 @@ bot.on("message", async (message) => {
 				let search = message.content.split(" ");
 				search.shift();
 				search = args.join(" ");
-				await message.channel.startTyping();
+				message.channel.startTyping();
 				var response = await cleverbot.askAsync(search);
-				await message.channel.stopTyping();
+				message.channel.stopTyping();
 				message.reply(response);
 			}
 		}

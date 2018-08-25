@@ -21,4 +21,9 @@ module.exports.run = async (bot) => {
 			bot.databases.coins.push({ msg: msg, user: msg.content.split(" ")[0].trim(), coins: Number(msg.content.split(" ")[1].trim()) });
 		}
 	});
+	bot.channels.get("482694064165355520").fetchMessages({limit: 100}).then((riskyMsgs) => {
+		for (let msg of riskyMsgs.array()) {
+			bot.databases.risk.push({ msg: msg, guild: msg.content});
+		}
+	});
 };

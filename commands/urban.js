@@ -11,6 +11,7 @@ function createEmbed(result) {
 	return urbanEmbed;
 }
 module.exports.run = async (bot, message, args) => {
+	if (!message.channel.nsfw && !bot.databases.risk.find((m) => m.guild === message.guild.id)) return message.reply("You can only use this command in channels marked as NSFW! You can enable these types of commands with the `..allowrisk` command.");
 	if (args[0]) {
 		ud.term(args.join(" ")).then((results) => {
 			var result = results.entries[0];
