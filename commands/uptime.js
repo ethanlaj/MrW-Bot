@@ -22,7 +22,7 @@ module.exports.run = async (bot, message) => {
 	if (minutes > 1) {
 		minutes = `\`${minutes}\` minutes, `;
 	} else if (minutes === 1) {
-		`\`${minutes}\` minute, `;
+		minutes = `\`${minutes}\` minute, `;
 	} else {
 		minutes = "";
 	}
