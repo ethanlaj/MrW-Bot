@@ -15,9 +15,7 @@ bot.defaultPrefix = botconfig.prefix;
 var loadFile = fs.readdirSync(__dirname + "/load");
 
 cleverio.prototype.askAsync = util.promisify(cleverbot.ask);
-cleverbot.create(function (err, session) {
-	cleverbot.setNick(session);
-});
+cleverbot.setNick("R4HhxsVk");
 for (let file of loadFile) {
 	try {
 		let loader = require("./load/" + file);
@@ -114,9 +112,13 @@ bot.on("message", async (message) => {
 				search.shift();
 				search = args.join(" ");
 				message.channel.startTyping();
-				var response = await cleverbot.askAsync(search);
-				message.channel.stopTyping();
-				message.reply(response);
+				cleverbot.askAsync(search).then((response) => {
+					message.channel.stopTyping();
+					message.reply(response);
+				}).catch((e) => {
+					message.channel.stopTyping();
+					console.log(e);
+				});
 			}
 		}
 	}
