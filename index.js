@@ -1,9 +1,9 @@
 const botconfig = require("./botconfig.js");
 const Discord = require("discord.js");
 const fs = require("fs");
-const util = require("util");
-var cleverio = require("cleverbot.io"),
-	cleverbot = new cleverio(process.env.CLEVER_USER, process.env.CLEVER_KEY);
+//const util = require("util");
+//var cleverio = require("cleverbot.io"),
+//cleverbot = new cleverio(process.env.CLEVER_USER, process.env.CLEVER_KEY);
 const bot = new Discord.Client({ disableEveryone: true, fetchAllMembers: true });
 bot.counter = false;
 bot.commands = { enabledCommands: new Discord.Collection(), disabledCommands: [] };
@@ -14,10 +14,10 @@ bot.loaders = { enabledLoaders: [], disabledLoaders: [] };
 bot.defaultPrefix = botconfig.prefix;
 var loadFile = fs.readdirSync(__dirname + "/load");
 
-cleverio.prototype.askAsync = util.promisify(cleverbot.ask);
-cleverbot.create(function (err, session) {
-	cleverbot.setNick(session);
-});
+//cleverio.prototype.askAsync = util.promisify(cleverbot.ask);
+//cleverbot.create(function (err, session) {
+//	cleverbot.setNick(session);
+//});
 for (let file of loadFile) {
 	try {
 		let loader = require("./load/" + file);
@@ -114,9 +114,9 @@ bot.on("message", async (message) => {
 				search.shift();
 				search = args.join(" ");
 				message.channel.startTyping();
-				var response = await cleverbot.askAsync(search);
+				//var response = await cleverbot.askAsync(search);
 				message.channel.stopTyping();
-				message.reply(response);
+				//message.reply(response);
 			}
 		}
 	}
