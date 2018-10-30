@@ -86,57 +86,54 @@ bot.on("message", async (message) => {
 					commandFile.run(bot, message, args, prefix, content, permissionLevel);
 				} else message.reply("This command is disabled by an admin in this server!");
 			}
-		}
-	} else if (new RegExp(`^<@!?${bot.user.id}>`, "").test(message.content)) {
-		args = message.content.split(" ");
-		let mention = args[0];
-		args.shift();
-		if (!args[0]) return;
-		let cmd = message.content.split(" ")[1].toLowerCase().slice(mention + 1);
-		commandFile = bot.commands.enabledCommands.get(cmd);
-		if (commandFile != null) {
-			message.mentions.members.delete(bot.user.id);
-			message.mentions.users.delete(bot.user.id);
-			message.content = message.content.replace(`${mention} `, prefix);
+		} else if (new RegExp(`^<@!?${bot.user.id}>`, "").test(message.content)) {
+			args = message.content.split(" ");
+			let mention = args[0];
 			args.shift();
-			let content = args.join(" ");
-			commandFile = bot.commands.enabledCommands.find((command) => command.help.name === cmd || (command.help.aliases || []).includes(cmd));
+			if (!args[0]) return;
+			let cmd = message.content.split(" ")[1].toLowerCase().slice(mention + 1);
+			commandFile = bot.commands.enabledCommands.get(cmd);
 			if (commandFile != null) {
-				const disabled = bot.databases.disabled.find((value) => value.guild === message.guild.id);
-				let disableCheck = (disabled == null) ? false : true;
-				if (disableCheck) disableCheck = (disabled.commands.includes(cmd)) ? true : false;
-				if (!disableCheck) {
-					commandFile.run(bot, message, args, prefix, content, permissionLevel);
-				} else message.reply("This command is disabled by an admin in this server!");
-			}
-		}
-	} else if (!message.author.bot || message.channel.type !== "dm") {
-		if (new RegExp(`^<@!?${bot.user.id}> prefix$`, "").test(message.content.toLowerCase())) {
-			return message.reply(`My prefix is \`${prefix}\``).catch(() => {
-				return message.author.send(`You attempted to use a command in ${message.channel}, but I can not chat there.`).catch(function() {});
-			});
-		} else if (new RegExp(`^<@!?${bot.user.id}> prefix reset$`, "").test(message.content.toLowerCase()) && (message.member.hasPermission("MANAGE_GUILD"))) {
-			if (prefix !== botconfig.prefix) {
-				bot.databases.prefixes.splice(bot.databases.prefixes.indexOf(bot.databases.prefixes.find((value) => value.guild === message.guild.id)), 1);
-				if (rawPrefix) rawPrefix.msg.delete();
-				return message.react("\u2705").catch(function() {});
+				message.mentions.members.delete(bot.user.id);
+				message.mentions.users.delete(bot.user.id);
+				message.content = message.content.replace(`${mention} `, prefix);
+				args.shift();
+				let content = args.join(" ");
+				commandFile = bot.commands.enabledCommands.find((command) => command.help.name === cmd || (command.help.aliases || []).includes(cmd));
+				if (commandFile != null) {
+					const disabled = bot.databases.disabled.find((value) => value.guild === message.guild.id);
+					let disableCheck = (disabled == null) ? false : true;
+					if (disableCheck) disableCheck = (disabled.commands.includes(cmd)) ? true : false;
+					if (!disableCheck) {
+						commandFile.run(bot, message, args, prefix, content, permissionLevel);
+					} else message.reply("This command is disabled by an admin in this server!");
+				}
+			} else if (new RegExp(`^<@!?${bot.user.id}> prefix`, "").test(message.content)) {
+				return message.reply(`My prefix is \`${prefix}\``).catch(() => {
+					return message.author.send(`You attempted to use a command in ${message.channel}, but I can not chat there.`).catch(function() {});
+				});
+			} else if ((new RegExp(`^<@!?${bot.user.id}> prefix reset`, "").test(message.content)) && (message.member.hasPermission("MANAGE_GUILD"))) {
+				if (prefix !== botconfig.prefix) {
+					bot.databases.prefixes.splice(bot.databases.prefixes.indexOf(bot.databases.prefixes.find((value) => value.guild === message.guild.id)), 1);
+					if (rawPrefix) rawPrefix.msg.delete();
+					return message.react("\u2705").catch(function() {});
+				} else {
+					return message.react("\u2705").catch(function() {});
+				}
 			} else {
-				return message.react("\u2705").catch(function() {});
+				let search = message.content.split(" ");
+				search.shift();
+				search = args.join(" ");
+				message.channel.startTyping();
+				cleverbot.askAsync(search).then((response) => {
+					message.channel.stopTyping();
+					message.reply(response);
+				}).catch((e) => {
+					message.channel.stopTyping();
+					console.log(e);
+				});
 			}
 		}
-	} else {
-		let search = message.content.split(" ");
-		search.shift();
-		search = args.join(" ");
-		message.channel.startTyping();
-		cleverbot.askAsync(search).then((response) => {
-			message.channel.stopTyping();
-			message.reply(response);
-		}).catch((e) => {
-			message.channel.stopTyping();
-			console.log(e);
-		});
 	}
-
 });
 bot.login(botconfig.token);
