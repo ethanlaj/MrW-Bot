@@ -13,13 +13,6 @@ module.exports.run = async (bot) => {
 		var guild = msg.content.split(" ")[0];
 		var prefix = msg.content.split(" ")[1];
 		bot.databases.prefixes.push({ guild: guild, prefix: prefix, msg: msg });
-		await client.query(`
-		INSERT INTO Guilds (id, prefix) 
-		VALUES ($1, $2) 
-		ON CONFLICT (id) DO UPDATE SET
-        		prefix = $2
-    		WHERE id = $1;`, [guild, prefix]);
-		msg.delete();
 	}
 	channels = bot.guilds.get("443929284411654144").channels.filter((m) => RegExp("wbotdisable-database", "gi").test(m.name));
 	nestedMessages = await Promise.all(channels.map((ch) => ch.fetchMessages({ limit: 100 })));

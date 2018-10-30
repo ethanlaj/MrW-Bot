@@ -1,9 +1,10 @@
+var app = require("../utility/databaseFunctions.js");
 const Discord = require("discord.js");
 var google = require("google");
 google.resultsPerPage = 51;
 module.exports.run = async (bot, message, args, prefix, content) => {
-	if (!message.channel.nsfw && !bot.databases.risk.find((m) => m.guild === message.guild.id)) return message.reply("You can only use this command in channels marked as NSFW! You can enable these types of commands with the `..allowrisk` command.");
-	if (!args[0]) return message.reply("You must provide a search query!");
+	var risk = await app.getRisk(bot.client, message.guild.id);
+	if (!message.channel.nsfw && !risk) return message.reply("You can only use this command in channels marked as NSFW! You can enable these types of commands with the `..allowrisk` command.");	if (!args[0]) return message.reply("You must provide a search query!");
 	google(content, function (err, res) {
 		if (err) console.error(err);
 		if (!res.links[0]) return message.reply("Couldn't find anything with this search query!");

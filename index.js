@@ -1,9 +1,10 @@
 const botconfig = require("./botconfig.js");
 const Discord = require("discord.js");
 const fs = require("fs");
-//const util = require("util");
-//var cleverio = require("cleverbot.io"),
-//cleverbot = new cleverio(process.env.CLEVER_USER, process.env.CLEVER_KEY);
+const util = require("util");
+var { Client } = require("pg");
+var cleverio = require("cleverbot.io"),
+	cleverbot = new cleverio(process.env.CLEVER_USER, process.env.CLEVER_KEY);
 const bot = new Discord.Client({ disableEveryone: true, fetchAllMembers: true });
 bot.counter = false;
 bot.commands = { enabledCommands: new Discord.Collection(), disabledCommands: [] };
@@ -11,13 +12,12 @@ bot.allcommands = new Discord.Collection();
 bot.rateLimits = { poll: [], report: [], afk: [], collect: [], gamble: [] };
 bot.databases = { disabled: [], prefixes: [], coins: [], risk: []};
 bot.loaders = { enabledLoaders: [], disabledLoaders: [] };
+var app = require("./utility/databaseFunctions.js");
 bot.defaultPrefix = botconfig.prefix;
 var loadFile = fs.readdirSync(__dirname + "/load");
 
-//cleverio.prototype.askAsync = util.promisify(cleverbot.ask);
-//cleverbot.create(function (err, session) {
-//	cleverbot.setNick(session);
-//});
+cleverio.prototype.askAsync = util.promisify(cleverbot.ask);
+cleverbot.setNick(process.env.CLEVER_SESSION);
 for (let file of loadFile) {
 	try {
 		let loader = require("./load/" + file);
@@ -67,17 +67,19 @@ bot.on("ready", async () => {
 	for (let loader of loaders) {
 		if (loader.run != null) loader.run(bot);
 	}
+	bot.client = new Client({ connectionString: process.env.WindowsDB, ssl: true });
+	await bot.client.connect();
 });
 
 bot.on("message", async (message) => {
+	var args;
 	if (message.channel.type !== "dm" && !message.author.bot) {
-		var rawPrefix = bot.databases.prefixes.find((value) => value.guild === message.guild.id);
-		var prefix = (rawPrefix != undefined) ? rawPrefix.prefix : bot.defaultPrefix;
+		var prefix = await app.getPrefix(bot.client, message.guild.id);
 		var permissionLevel = bot.getPermissionLevel(message.author);
 		if (message.content.startsWith(prefix)) {
-			let args = message.content.split(" ").slice(1),
-				content = args.join(" "),
-				cmd = message.content.split(" ")[0].toLowerCase().slice(prefix.length);
+			args = message.content.split(" ").slice(1);
+			let content = args.join(" ");
+			let cmd = message.content.split(" ")[0].toLowerCase().slice(prefix.length);
 			var commandFile = bot.commands.enabledCommands.find((command) => command.help.name === cmd || (command.help.aliases || []).includes(cmd));
 			if (commandFile != null) {
 				const disabled = bot.databases.disabled.find((value) => value.guild === message.guild.id);
@@ -88,8 +90,8 @@ bot.on("message", async (message) => {
 				} else message.reply("This command is disabled by an admin in this server!");
 			}
 		} else if (new RegExp(`^<@!?${bot.user.id}>`, "").test(message.content)) {
-			let args = message.content.split(" "),
-				mention = args[0];
+			args = message.content.split(" ");
+			let mention = args[0];
 			args.shift();
 			if (!args[0]) return;
 			let cmd = message.content.split(" ")[1].toLowerCase().slice(mention + 1);
@@ -109,14 +111,29 @@ bot.on("message", async (message) => {
 						commandFile.run(bot, message, args, prefix, content, permissionLevel);
 					} else message.reply("This command is disabled by an admin in this server!");
 				}
+			} else if ((new RegExp(`^<@!?${bot.user.id}> prefix reset`, "").test(message.content)) && (message.member.hasPermission("MANAGE_GUILD"))) {
+				if (prefix !== botconfig.prefix) {
+					await app.setPrefix(bot.client, message.guild.id);
+					return message.react("\u2705").catch(function() {});
+				} else {
+					return message.react("\u2705").catch(function() {});
+				}
+			} else if (new RegExp(`^<@!?${bot.user.id}> prefix`, "").test(message.content)) {
+				return message.reply(`My prefix is \`${prefix}\``).catch(() => {
+					return message.author.send(`You attempted to use a command in ${message.channel}, but I can not chat there.`).catch(function() {});
+				});
 			} else {
 				let search = message.content.split(" ");
 				search.shift();
 				search = args.join(" ");
 				message.channel.startTyping();
-				//var response = await cleverbot.askAsync(search);
-				message.channel.stopTyping();
-				//message.reply(response);
+				cleverbot.askAsync(search).then((response) => {
+					message.channel.stopTyping();
+					message.reply(response);
+				}).catch((e) => {
+					message.channel.stopTyping();
+					console.log(e);
+				});
 			}
 		}
 	}

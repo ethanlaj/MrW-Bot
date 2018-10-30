@@ -1,4 +1,5 @@
 const Discord = require("discord.js");
+var app = require("../utility/databaseFunctions.js");
 async function awaitReply(message, question, limit = 300000) {
 	const filter = (m) => m.author.id === message.author.id;
 	await message.author.send(question);
@@ -17,14 +18,8 @@ async function awaitReply(message, question, limit = 300000) {
 module.exports.run = async (bot, message) => {
 	let timeoutchannel = bot.channels.get("443931386458406923");
 	let reportchannel = bot.channels.get("420180153931530240");
-	let blacklistchannel = bot.channels.get("443931370968973312");
-	let bmessages = await blacklistchannel.fetchMessages({
-		limit: 100
-	});
-	let barray = bmessages.filter((m) => RegExp(message.author.id, "gi")
-		.test(m.content));
-	let auser = barray.first();
-	if (auser) return message.reply("You cannot use this command because you are blacklisted!");
+	var blacklisted = await app.blacklist(bot.client, message.author.id);
+	if (blacklisted) return message.reply("You cannot use this command because you are blacklisted!");
 	if (bot.rateLimits.report.includes(message.author.id)) return message.reply("You cannot use this command because you just used it! To avoid spam, you must wait five minutes from the last time you used this command! If you are already in the process of using this command, you must cancel this prompt!");
 	timeoutchannel.send(`${message.author.id}, ${message.author.username}#${message.author.discriminator}\n**MUST WAIT TO USE REPORT COMMAND (IP)**`);
 	let ttchannel = bot.channels.get("443931386458406923");
