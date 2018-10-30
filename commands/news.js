@@ -1,10 +1,10 @@
 const Discord = require("discord.js");
+var app = require("../utility/databaseFunctions.js");
 module.exports.run = async (bot, message) => {
-	let channel = bot.channels.get("443931372508151820");
-	let editor = await channel.fetchMessage("443935229548167174");
+	let editor = await app.getNews(bot.client);
 	let thing = new Discord.RichEmbed()
 		.setTitle("News")
-		.setDescription(editor.content)
+		.setDescription(editor)
 		.setFooter(`Requested by ${message.author.tag}`);
 	await message.channel.send({ embed: thing });
 };

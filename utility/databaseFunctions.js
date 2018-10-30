@@ -80,4 +80,14 @@ module.exports = {
 			return true;
 		}
 	},
+	setNews: async function(client, text) {
+		await client.query(`UPDATE info
+		SET news = $1
+		WHERE ref = 1`, [text]);
+	},
+	getNews: async function(client) {
+		let data = await client.query(`SELECT news FROM info
+		WHERE ref = 1`);
+		return data.rows[0].news;
+	}
 };
