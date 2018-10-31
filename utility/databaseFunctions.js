@@ -89,5 +89,26 @@ module.exports = {
 		let data = await client.query(`SELECT news FROM info
 		WHERE ref = 1`);
 		return data.rows[0].news;
+	},
+	getAnnounce: async function (client, id) {
+		let data = await client.query(`SELECT * FROM announcer
+		WHERE guildid = $1`, [id]);
+		if (!data.rows[0]) return {toggle: false};
+		let row = data.rows[0];
+		return {toggle: true, channelid: row.channelid, avatars: row.avatars, footer: row.footer, hellomsg: row.hellomsg, byemsg: row.byemsg};
+	},
+	updateAnnouncer: async function(client, guildid, toggle, channelid, avatars, footer, hellomsg, byemsg) {
+		let data = await client.query(`SELECT * FROM announcer
+		WHERE guildid = $1`, [guildid]);
+		if (data.rows[0]) {
+			if (toggle === false) return await client.query(`DELETE FROM ANNOUNCER
+			WHERE guildid = $1`, [guildid]);
+			await client.query(`UPDATE announcer
+			SET channelid = $2, avatars = $3, footer = $4, hellomsg = $5, byemsg = $6
+			WHERE guildid = $1`, [guildid, channelid, avatars, footer, hellomsg, byemsg]);
+		} else {
+			await client.query(`INSERT INTO announcer
+			VALUES ($1, $2, $3, $4, $5, $6)`, [guildid, channelid, avatars, footer, hellomsg, byemsg]);
+		}
 	}
 };

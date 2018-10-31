@@ -1,4 +1,5 @@
 const Discord = require("discord.js");
+var app = require("../utility/databaseFunctions.js");
 module.exports.run = async (bot) => {
 	bot.on("guildMemberAdd", async (member) => {
 		var dbguild = bot.guilds.get("443929284411654144");
@@ -15,19 +16,16 @@ module.exports.run = async (bot) => {
 				}).catch(function() {});
 			}
 		}
-		var announcerchannel = bot.channels.get("443931378011078666");
-		var announcermsgs = await announcerchannel.fetchMessages({ limit: 100 });
-		var announcermsg = announcermsgs.find((m) => m.content.startsWith(member.guild.id));
-		if (!announcermsg) return;
+		let settings = await app.getAnnounce(bot.client, member.guild.id);
+		if (!settings.toggle) return;
 		//guildid | toggle | channel | avatar | footer | hellomsg | goodbyemsg
-		var settings = announcermsg.content;
-		var togglesetting = settings.split("|")[1].trim();
-		var channelsetting = settings.split("|")[2].trim();
-		var avatarsetting = settings.split("|")[3].trim();
-		var footersetting = settings.split("|")[4].trim();
-		var hellomsg = settings.split("|")[5].trim();
-		if (togglesetting === "false") return;
-		if (channelsetting === "none") return;
+		let togglesetting = settings.toggle;
+		let channelsetting = settings.channelid;
+		let avatarsetting = settings.avatars;
+		let footersetting = settings.footer;
+		let hellomsg = settings.hellomsg;
+		if (togglesetting === false) return;
+		if (channelsetting === 0) return;
 		var himessage;
 		if (hellomsg !== "none") {
 			himessage = hellomsg.replace(/{user((\.|-| )(mention))?}/gi, member.user.toString());
@@ -48,8 +46,8 @@ module.exports.run = async (bot) => {
 			.setTitle("Welcome")
 			.setColor("#ffa500")
 			.setDescription(himessage);
-		if (footersetting === "true") welcomeMessage.setFooter(`${member.guild.name} is now at ${member.guild.memberCount} members!`);
-		if (avatarsetting === "true") welcomeMessage.setThumbnail(member.user.displayAvatarURL);
+		if (footersetting === true) welcomeMessage.setFooter(`${member.guild.name} is now at ${member.guild.memberCount} members!`);
+		if (avatarsetting === true) welcomeMessage.setThumbnail(member.user.displayAvatarURL);
 		var channeltosend = bot.channels.get(channelsetting);
 		if (!channeltosend) return;
 		channeltosend.send({
@@ -64,21 +62,16 @@ module.exports.run = async (bot) => {
 			});
 	});
 	bot.on("guildMemberRemove", async (member) => {
-		var announcerchannel = bot.channels.get("443931378011078666");
-		var announcermsgs = await announcerchannel.fetchMessages({
-			limit: 100
-		});
-		var announcermsg = announcermsgs.find((m) => m.content.startsWith(member.guild.id));
-		if (!announcermsg) return;
+		let settings = await app.getAnnounce(bot.client, member.guild.id);
+		if (!settings.toggle) return;
 		//guildid | toggle | channel | avatar | footer | hellomsg | goodbyemsg
-		var settings = announcermsg.content;
-		var togglesetting = settings.split("|")[1].trim();
-		var channelsetting = settings.split("|")[2].trim();
-		var avatarsetting = settings.split("|")[3].trim();
-		var footersetting = settings.split("|")[4].trim();
-		var byemsg = settings.split("|")[6].trim();
-		if (togglesetting === "false") return;
-		if (channelsetting === "none") return;
+		let togglesetting = settings.toggle;
+		let channelsetting = settings.channelid;
+		let avatarsetting = settings.avatars;
+		let footersetting = settings.footer;
+		let byemsg = settings.byemsg;
+		if (togglesetting === false) return;
+		if (channelsetting === 0) return;
 		var byemessage;
 		if (byemsg !== "none") {
 			byemessage = byemsg.replace(/{user((\.|-| )(mention))?}/gi, member.user.toString());
@@ -99,8 +92,8 @@ module.exports.run = async (bot) => {
 			.setTitle("Goodbye")
 			.setColor("#0000ff")
 			.setDescription(byemessage);
-		if (footersetting === "true") goodbyeMessage.setFooter(`${member.guild.name} is now at ${member.guild.memberCount} members!`);
-		if (avatarsetting === "true") goodbyeMessage.setThumbnail(member.user.displayAvatarURL);
+		if (footersetting === true) goodbyeMessage.setFooter(`${member.guild.name} is now at ${member.guild.memberCount} members!`);
+		if (avatarsetting === true) goodbyeMessage.setThumbnail(member.user.displayAvatarURL);
 		var channeltosend = bot.channels.get(channelsetting);
 		if (!channeltosend) return;
 		channeltosend.send({ embed: goodbyeMessage }).catch(() => {
